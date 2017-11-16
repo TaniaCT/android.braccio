@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        globalClasses = (GlobalClasses)getApplication();
+        globalClasses = (GlobalClasses) getApplication();
         setContentView(R.layout.activity_main);
 
         listDevices = findViewById(R.id.listDevices);
@@ -38,7 +38,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        if (!globalClasses.MyBluetooth.GetBTAdapter().isEnabled()) globalClasses.MyBluetooth.VerifyBT();
+        if (!globalClasses.MyBluetooth.GetBTAdapter().isEnabled())
+            globalClasses.MyBluetooth.VerifyBT();
         else {
             listDevices.setAdapter(globalClasses.MyBluetooth.GetPairedDevices());
 
@@ -49,12 +50,14 @@ public class MainActivity extends AppCompatActivity {
                     String address = info.substring(info.length() - 17);
                     try {
                         globalClasses.MyBluetooth.SetAddress(address);
+
                         if (globalClasses.MyBluetooth.BTConnected) {
                             Toast.makeText(MainActivity.this, "Connected.", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(MainActivity.this, ControlActivity.class);
                             startActivity(intent);
                         }
-                    } catch (IOException e) { }
+                    } catch (IOException e) {
+                    }
                 }
             });
         }

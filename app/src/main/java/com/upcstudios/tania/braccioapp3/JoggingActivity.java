@@ -15,7 +15,7 @@ public class JoggingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        globalClasses = (GlobalClasses)getApplication();
+        globalClasses = (GlobalClasses) getApplication();
         setContentView(R.layout.activity_jogging);
 
         sendButton2 = findViewById(R.id.sendButton2);
@@ -32,6 +32,7 @@ public class JoggingActivity extends AppCompatActivity {
         dataButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*
                 if (globalClasses.MyBluetooth.Messages.size() > 0) {
                     receivedText2.setText("Dato: " + globalClasses.MyBluetooth.Messages.get(globalClasses.MyBluetooth.Messages.size() - 1));
                     globalClasses.MyBluetooth.Messages.remove(globalClasses.MyBluetooth.Messages.size() - 1);
@@ -40,6 +41,7 @@ public class JoggingActivity extends AppCompatActivity {
                     Toast.makeText(JoggingActivity.this, "No hay mensajes", Toast.LENGTH_SHORT).show();
                     receivedText2.setText("Dato: ");
                 }
+                */
             }
         });
     }
