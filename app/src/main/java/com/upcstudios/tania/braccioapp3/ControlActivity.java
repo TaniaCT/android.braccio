@@ -1,52 +1,62 @@
 package com.upcstudios.tania.braccioapp3;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class ControlActivity extends AppCompatActivity {
 
     private boolean close;
     GlobalClasses globalClasses;
     TextView receivedText;
-    Button sendSmthButton, joggingButton, programButton;
+    Button testControlButton, joggingButton, programButton;
+    Handler controlHandler;
 
     private Thread readBluetoothThread;
+    public boolean startedThread = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         globalClasses = (GlobalClasses) getApplication();
         setContentView(R.layout.activity_control);
 
         globalClasses.MyBluetooth.VerifyBT();
 
         receivedText = findViewById(R.id.receivedText);
-        sendSmthButton = findViewById(R.id.sendSmthButton);
+        testControlButton = findViewById(R.id.testControlButton);
         joggingButton = findViewById(R.id.joggingButton);
         programButton = findViewById(R.id.programButton);
 
         readBluetoothThread = new Thread(new Runnable() {
+
             @Override
             public void run() {
                 System.out.println("Begin BT read thread.");
                 try {
                     while (true) {
 
-                        String newMessage;
+                        String newMessage = null;
 
                         synchronized (BluetoothClass.messageLock) {
                             BluetoothClass.messageLock.wait();
-                            newMessage = BluetoothClass.messageQueue.poll();
+                            if (startedThread) newMessage = BluetoothClass.messageQueue.poll();
                         }
 
                         // SAFE ZONE
-                        System.out.println("BT MESSAGE: " + newMessage);
+                        if (startedThread)
+                        {
+                            System.out.println("BT MESSAGE: " + newMessage);
+                            globalClasses.MyBluetooth.writeMessage("Echo1: "+newMessage);
+                            controlHandler.obtainMessage(0, newMessage.length(),-1, newMessage).sendToTarget();
+                        }
+                        //receivedText.setText("Dato:" + newMessage);
                         // SAFE ZONE
 
                     }
@@ -56,7 +66,19 @@ public class ControlActivity extends AppCompatActivity {
             }
         });
 
-        sendSmthButton.setOnClickListener(new View.OnClickListener() {
+        controlHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+
+                if (msg.what == 0) {
+                    String readMessage = (String) msg.obj;
+                    receivedText.setText("Data: " + readMessage);
+                }
+            }
+        };
+
+        testControlButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 globalClasses.MyBluetooth.writeMessage("Hello");
@@ -66,25 +88,16 @@ public class ControlActivity extends AppCompatActivity {
         joggingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*
-                if (globalClasses.MyBluetooth.Messages.size() > 0) {
-                    receivedText.setText("Dato: " + globalClasses.MyBluetooth.Messages.get(globalClasses.MyBluetooth.Messages.size() - 1));
-                    globalClasses.MyBluetooth.Messages.remove(globalClasses.MyBluetooth.Messages.size() - 1);
-                }
-                else {
-                    Toast.makeText(ControlActivity.this, "No hay mensajes", Toast.LENGTH_SHORT).show();
-                    receivedText.setText("Dato: ");
-                }
-                */
+                close = false;
+                Intent intent = new Intent(ControlActivity.this, JoggingActivity.class);
+                startActivity(intent);
             }
         });
 
         programButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                close = false;
-                Intent intent = new Intent(ControlActivity.this, JoggingActivity.class);
-                startActivity(intent);
+
             }
         });
     }
@@ -93,7 +106,9 @@ public class ControlActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        readBluetoothThread.start();
+        if (readBluetoothThread.getState() == Thread.State.NEW) readBluetoothThread.start();
+        else startedThread = true;
+
         close = true;
     }
 
@@ -101,8 +116,11 @@ public class ControlActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 
-        globalClasses.MyBluetooth.CloseConnection();
-        readBluetoothThread.interrupt();
-        //if (close) System.exit(0);
+        // The connection will be interrupted when going to the MainActivity
+        if (close) {
+            globalClasses.MyBluetooth.CloseConnection();
+            readBluetoothThread.interrupt();
+        }
+        else startedThread = false;
     }
 }

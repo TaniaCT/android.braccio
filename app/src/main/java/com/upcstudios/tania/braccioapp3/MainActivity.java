@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -15,18 +16,19 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity {
     GlobalClasses globalClasses;
     ListView listDevices;
-    Button searchButton;
+    Button searchPairedButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         globalClasses = (GlobalClasses) getApplication();
         setContentView(R.layout.activity_main);
 
         listDevices = findViewById(R.id.listDevices);
-        searchButton = findViewById(R.id.searchButton);
+        searchPairedButton = findViewById(R.id.searchPairedButton);
 
-        searchButton.setOnClickListener(new View.OnClickListener() {
+        searchPairedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 listDevices.setAdapter(globalClasses.MyBluetooth.GetPairedDevices());

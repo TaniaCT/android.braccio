@@ -27,15 +27,15 @@ public class BluetoothClass {
     private String BTAddress = null;
     private BluetoothSocket BTSocket = null;
     private BluetoothDevice BTDevice;
-    private static UUID BTMODULEUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-    private ConnectedThread MyBTConnection;
+    private UUID BTMODULEUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+    private Thread btConnectionThread;
+    private OutputStream mmOutStream = null;
 
 
     public BluetoothClass(Context context) {
         BTContext = context;
         BTAdapter = BluetoothAdapter.getDefaultAdapter();
         PairedDevicesArrayAdapter = new ArrayAdapter<String>(context, R.layout.device_list_item);
-        VerifyBT();
     }
 
     public BluetoothAdapter GetBTAdapter() {
@@ -56,12 +56,15 @@ public class BluetoothClass {
     public ArrayAdapter<String> GetPairedDevices() {
         if (PairedDevicesArrayAdapter.getCount() != 0) PairedDevicesArrayAdapter.clear();
         VerifyBT();
-        Set<BluetoothDevice> pairedDevices = BTAdapter.getBondedDevices();
-        if (pairedDevices.size() > 0) {
-            for (BluetoothDevice device : pairedDevices) {
-                PairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
+        if (BTAdapter.isEnabled()) {
+            Set<BluetoothDevice> pairedDevices = BTAdapter.getBondedDevices();
+            if (pairedDevices.size() > 0) {
+                for (BluetoothDevice device : pairedDevices) {
+                    PairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
+                }
             }
         }
+        else Toast.makeText(BTContext, "Bluetooth adapter disabled", Toast.LENGTH_SHORT).show();
         return PairedDevicesArrayAdapter;
     }
 
@@ -69,20 +72,11 @@ public class BluetoothClass {
         BTAddress = address;
         BTDevice = BTAdapter.getRemoteDevice(BTAddress);
 
-        /*if (BTSocket != null) {
-            try {
-                BTSocket.close();
-                SetSocket();
-                if (BTConnected) {
-                }
-            }
-            catch (IOException e) { Toast.makeText(BTContext, "Could close the connection", Toast.LENGTH_LONG).show();}
-        }
-        else {*/
         SetSocket();
-        MyBTConnection = new ConnectedThread(BTSocket);
-        MyBTConnection.start();
-        //}
+        if (BTConnected) {
+            btConnectionThread = new Thread(new ConnectedRunnable(BTSocket));
+            btConnectionThread.start();
+        }
     }
 
     public String GetAddress() {
@@ -95,16 +89,17 @@ public class BluetoothClass {
             for (int i = 0; i < 100; i++) ;
             try {
                 BTSocket.connect();
+                writeMessage("Connected");
             } catch (IOException e) {
-                Toast.makeText(BTContext, "Error connecting: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                /*try {
+                Toast.makeText(BTContext, "Error connecting: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                try {
                     BTSocket.close();
                 }
-                catch (IOException e2) {}*/
+                catch (IOException e2) {}
             }
             BTConnected = BTSocket.isConnected();
         } catch (IOException e) {
-            Toast.makeText(BTContext, "Socket creation failed. Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(BTContext, "Socket creation failed. Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -116,34 +111,30 @@ public class BluetoothClass {
         try {
             BTSocket.close();
             BTConnected = false;
-            MyBTConnection.interrupt();
+            btConnectionThread.interrupt();
+            mmOutStream = null;
         } catch (IOException e) {
         }
     }
 
-    private class ConnectedThread extends Thread {
+    private class ConnectedRunnable implements Runnable{
         private final InputStream mmInStream;
-        private final OutputStream mmOutStream;
-        InputStream tmpIn = null;
+        //private final OutputStream mmOutStream;
 
-        public ConnectedThread(BluetoothSocket socket) {
-            OutputStream tmpOut = null;
-
+        public ConnectedRunnable(BluetoothSocket btsocket){
             // Get the input and output streams, using temp objects because
             // member streams are final
+            InputStream tmpIn = null;
             try {
-                tmpIn = socket.getInputStream();
-                tmpOut = socket.getOutputStream();
+                tmpIn = btsocket.getInputStream();
+                //tmpOut = btsocket.getOutputStream();
             } catch (IOException e) {
             }
-
             mmInStream = tmpIn;
-            mmOutStream = tmpOut;
         }
 
+        @Override
         public void run() {
-            //byte[] buffer = new byte[1024];  // buffer store for the stream
-            //int bytes;
             char ch; // bytes returned from read()
             String data;
             System.out.println("BTConnection: Begin Connection Thread");
@@ -165,22 +156,19 @@ public class BluetoothClass {
 
                 } catch (IOException e) {
                     break;
-
                 }
-            }
-        }
-
-        /* Call this from the main activity to send data to the remote device */
-        public void write(String input) {
-            try {
-                mmOutStream.write(input.getBytes());
-            } catch (IOException e) {
-                Toast.makeText(BTContext, "Connection failed", Toast.LENGTH_LONG).show();
             }
         }
     }
 
     public void writeMessage(String data) {
-        MyBTConnection.write(data);
+        try {
+            if(BTSocket != null && mmOutStream == null)
+                mmOutStream = BTSocket.getOutputStream();
+            mmOutStream.write(data.getBytes());
+
+        } catch (IOException e) {
+            System.out.println("BTConnection: Error writting to BT");
+        }
     }
 }

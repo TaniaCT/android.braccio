@@ -16,10 +16,13 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:background="@color/colorAccent"
+            android:gravity="center_horizontal"
             android:text="List of devices"
+            android:textColor="@android:color/black"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -32,7 +35,7 @@
             android:layout_height="250dp" />
 
         <Button
-            android:id="@+id/searchButton"
+            android:id="@+id/searchPairedButton"
             android:layout_width="225dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
