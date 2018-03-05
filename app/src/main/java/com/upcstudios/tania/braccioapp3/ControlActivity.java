@@ -10,6 +10,8 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class ControlActivity extends AppCompatActivity {
 
     private boolean close;
@@ -53,7 +55,9 @@ public class ControlActivity extends AppCompatActivity {
                         if (startedThread)
                         {
                             System.out.println("BT MESSAGE: " + newMessage);
-                            globalClasses.MyBluetooth.writeMessage("Echo1: "+newMessage);
+                            ArrayList<String> array = new ArrayList<String>();
+                            array.add("Echo1: "+newMessage);
+                            globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.SENDTEXT, array);
                             controlHandler.obtainMessage(0, newMessage.length(),-1, newMessage).sendToTarget();
                         }
                         //receivedText.setText("Dato:" + newMessage);
@@ -81,7 +85,9 @@ public class ControlActivity extends AppCompatActivity {
         testControlButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                globalClasses.MyBluetooth.writeMessage("Hello");
+                ArrayList<String> array = new ArrayList<String>();
+                array.add("Hello");
+                globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.SENDTEXT, array);
             }
         });
 

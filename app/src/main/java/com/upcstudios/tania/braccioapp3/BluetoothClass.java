@@ -11,6 +11,7 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -20,6 +21,28 @@ public class BluetoothClass {
     public boolean BTConnected = false;
     public static final ConcurrentLinkedQueue<String> messageQueue = new ConcurrentLinkedQueue<>();
     public static final Object messageLock = new Object();
+    public enum Commands {NULL, CONNECT, DISCONNECT, REQUEST, SENDTEXT, SENDTO, JOG}
+    public enum Communications{
+        COM_NULL(0),COM_SERIAL(1), COM_BLUETOOTH(2);
+        private int value;
+        private Communications(int val){
+            value = val;
+        }
+        public int getValue() {
+            return value;
+        }
+    }
+    public enum JogCommand {MINUS, EQU, PLUS}
+    public enum Joints{
+        NULL(0), BASE(1),SHOULDER(2), ELBOW(3), WRIST_VER(4), WRIST_ROT(5), GRIPPER(6);
+        private int value;
+        private Joints(int val){
+            value = val;
+        }
+        public int getValue() {
+            return value;
+        }
+    }
 
     private Context BTContext;
     private BluetoothAdapter BTAdapter = null;
@@ -89,7 +112,8 @@ public class BluetoothClass {
             for (int i = 0; i < 100; i++) ;
             try {
                 BTSocket.connect();
-                writeMessage("Connected");
+                ArrayList<String> array = new ArrayList<String>();
+                writeMessage(Commands.CONNECT, array);
             } catch (IOException e) {
                 Toast.makeText(BTContext, "Error connecting: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 try {
@@ -161,14 +185,71 @@ public class BluetoothClass {
         }
     }
 
-    public void writeMessage(String data) {
+    public void writeMessage(Commands command, ArrayList<String> arguments) {
         try {
             if(BTSocket != null && mmOutStream == null)
                 mmOutStream = BTSocket.getOutputStream();
-            mmOutStream.write(data.getBytes());
+            String data = CommandsToSend(command, arguments);
+            if (data != "") mmOutStream.write(data.getBytes());
 
         } catch (IOException e) {
             System.out.println("BTConnection: Error writting to BT");
         }
+    }
+
+    private String CommandsToSend (Commands command, ArrayList<String> arguments) {
+        String data = "";
+        int arg1 = 0;
+        int arg2 = 0;
+        switch (command){
+            case NULL: break;
+            case CONNECT: data = "1";
+            case DISCONNECT: data = "2";
+                break;
+            case REQUEST: data = "3";
+                break;
+            case SENDTEXT: data = "4 ";
+                data.concat(arguments.get(0));
+                break;
+            case SENDTO: //SENDTO [COMMUNICATION, TEXT]
+                arg1 = Integer.parseInt(arguments.get(0));
+                if (arg1 > 0 && arg1 < Communications.values().length){
+                    data = "5 ";
+                    data.concat(arguments.get(0) + " " + arguments.get(1));
+                }
+                break;
+            case JOG:
+                arg1 = Integer.parseInt(arguments.get(0));
+                if (arg1 > 0 && arg1 < Joints.values().length){
+                    arg2 = Integer.parseInt(arguments.get(1));
+                    if(arg1 == 1 && (arg2 >= 0 && arg2 <= 180)){
+                        data.concat("6 " + arguments.get(0) + " " + arguments.get(1));
+                    }
+                    else if(arg1 == 2 && (arg2 >= 15 && arg2 <= 165)){
+                        data.concat("6 " + arguments.get(0) + " " + arguments.get(1));
+                    }
+                    else if(arg1 == 3 && (arg2 >= 0 && arg2 <= 180)){
+                        data.concat("6 " + arguments.get(0) + " " + arguments.get(1));
+                    }
+                    else if(arg1 == 4 && (arg2 >= 0 && arg2 <= 180)){
+                        data.concat("6 " + arguments.get(0) + " " + arguments.get(1));
+                    }
+                    else if(arg1 == 5 && (arg2 >= 0 && arg2 <= 180)){
+                        data.concat("6 " + arguments.get(0) + " " + arguments.get(1));
+                    }
+                    else if(arg1 == 6 && (arg2 >= 10 && arg2 <= 73)){
+                        data.concat("6 " + arguments.get(0) + " " + arguments.get(1));
+                    }
+                }
+                break;
+            default: break;
+
+        }
+        return data;
+    }
+
+    private String CommandRecieved (){
+
+        return "";
     }
 }
