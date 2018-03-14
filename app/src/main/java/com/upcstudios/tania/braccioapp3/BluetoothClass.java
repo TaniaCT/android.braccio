@@ -21,27 +21,19 @@ public class BluetoothClass {
     public boolean BTConnected = false;
     public static final ConcurrentLinkedQueue<String> messageQueue = new ConcurrentLinkedQueue<>();
     public static final Object messageLock = new Object();
-    public enum Commands {NULL, CONNECT, DISCONNECT, REQUEST, SENDTEXT, SENDTO, JOG}
-    public enum Communications{
-        COM_NULL(0),COM_SERIAL(1), COM_BLUETOOTH(2);
-        private int value;
-        private Communications(int val){
-            value = val;
-        }
-        public int getValue() {
-            return value;
-        }
-    }
+    public enum Commands {NULL, CONNECT, DISCONNECT, REQUEST, SENDTEXT, SENDTO, JOG, MOVE}
+    public enum Communications{COM_NULL,COM_SERIAL, COM_BLUETOOTH}
     public enum JogCommand {MINUS, EQU, PLUS}
     public enum Joints{
-        NULL(0), BASE(1),SHOULDER(2), ELBOW(3), WRIST_VER(4), WRIST_ROT(5), GRIPPER(6);
+        NULL, BASE,SHOULDER, ELBOW, WRIST_VER, WRIST_ROT, GRIPPER
+        /*NULL(0), BASE(1),SHOULDER(2), ELBOW(3), WRIST_VER(4), WRIST_ROT(5), GRIPPER(6);
         private int value;
         private Joints(int val){
             value = val;
         }
         public int getValue() {
             return value;
-        }
+        }*/
     }
 
     private Context BTContext;
@@ -113,7 +105,7 @@ public class BluetoothClass {
             try {
                 BTSocket.connect();
                 ArrayList<String> array = new ArrayList<String>();
-                writeMessage(Commands.CONNECT, array);
+                writeMessage(Commands.CONNECT, Communications.COM_NULL, BluetoothClass.Joints.NULL, array);
             } catch (IOException e) {
                 Toast.makeText(BTContext, "Error connecting: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 try {
@@ -185,11 +177,11 @@ public class BluetoothClass {
         }
     }
 
-    public void writeMessage(Commands command, ArrayList<String> arguments) {
+    public void writeMessage(Commands command, Communications communication, Joints joint, ArrayList<String> arguments) {
         try {
             if(BTSocket != null && mmOutStream == null)
                 mmOutStream = BTSocket.getOutputStream();
-            String data = CommandsToSend(command, arguments);
+            String data = CommandsToSend(command, communication, joint, arguments);
             if (data != "") mmOutStream.write(data.getBytes());
 
         } catch (IOException e) {
@@ -197,48 +189,87 @@ public class BluetoothClass {
         }
     }
 
-    private String CommandsToSend (Commands command, ArrayList<String> arguments) {
+    private String CommandsToSend (Commands command, Communications communication, Joints joint, ArrayList<String> arguments) {
         String data = "";
         int arg1 = 0;
         int arg2 = 0;
         switch (command){
             case NULL: break;
             case CONNECT: data = "1";
+                break;
             case DISCONNECT: data = "2";
                 break;
             case REQUEST: data = "3";
                 break;
             case SENDTEXT: data = "4 ";
-                data.concat(arguments.get(0));
+                data = data.concat(arguments.get(0));
                 break;
             case SENDTO: //SENDTO [COMMUNICATION, TEXT]
-                arg1 = Integer.parseInt(arguments.get(0));
-                if (arg1 > 0 && arg1 < Communications.values().length){
-                    data = "5 ";
-                    data.concat(arguments.get(0) + " " + arguments.get(1));
+                switch (communication)
+                {
+                    case COM_NULL:
+                        break;
+                    case COM_SERIAL:
+                        data = "5 0 ";
+                        data = data.concat(arguments.get(0));
+                        break;
+                    case COM_BLUETOOTH:
+                        data = "5 1 ";
+                        data = data.concat(arguments.get(0));
+                        break;
+                    default: break;
                 }
                 break;
             case JOG:
                 arg1 = Integer.parseInt(arguments.get(0));
+                if(arg1 >= 0 && arg1 <= 2) {
+                    switch (joint) {
+                        case NULL:
+                            break;
+                        case BASE:
+                            data = data.concat("6 0 " + arguments.get(0));
+                            break;
+                        case SHOULDER:
+                            data = data.concat("6 1 " + arguments.get(0));
+                            break;
+                        case ELBOW:
+                            data = data.concat("6 2 " + arguments.get(0));
+                            break;
+                        case WRIST_VER:
+                            data = data.concat("6 3 " + arguments.get(0));
+                            break;
+                        case WRIST_ROT:
+                            data = data.concat("6 4 " + arguments.get(0));
+                            break;
+                        case GRIPPER:
+                            data = data.concat("6 5 " + arguments.get(0));
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                break;
+            case MOVE:
+                arg1 = Integer.parseInt(arguments.get(0));
                 if (arg1 > 0 && arg1 < Joints.values().length){
                     arg2 = Integer.parseInt(arguments.get(1));
                     if(arg1 == 1 && (arg2 >= 0 && arg2 <= 180)){
-                        data.concat("6 " + arguments.get(0) + " " + arguments.get(1));
+                        data = data.concat("6 " + arguments.get(0) + " " + arguments.get(1));
                     }
                     else if(arg1 == 2 && (arg2 >= 15 && arg2 <= 165)){
-                        data.concat("6 " + arguments.get(0) + " " + arguments.get(1));
+                        data = data.concat("6 " + arguments.get(0) + " " + arguments.get(1));
                     }
                     else if(arg1 == 3 && (arg2 >= 0 && arg2 <= 180)){
-                        data.concat("6 " + arguments.get(0) + " " + arguments.get(1));
+                        data = data.concat("6 " + arguments.get(0) + " " + arguments.get(1));
                     }
                     else if(arg1 == 4 && (arg2 >= 0 && arg2 <= 180)){
-                        data.concat("6 " + arguments.get(0) + " " + arguments.get(1));
+                        data = data.concat("6 " + arguments.get(0) + " " + arguments.get(1));
                     }
                     else if(arg1 == 5 && (arg2 >= 0 && arg2 <= 180)){
-                        data.concat("6 " + arguments.get(0) + " " + arguments.get(1));
+                        data = data.concat("6 " + arguments.get(0) + " " + arguments.get(1));
                     }
                     else if(arg1 == 6 && (arg2 >= 10 && arg2 <= 73)){
-                        data.concat("6 " + arguments.get(0) + " " + arguments.get(1));
+                        data = data.concat("6 " + arguments.get(0) + " " + arguments.get(1));
                     }
                 }
                 break;

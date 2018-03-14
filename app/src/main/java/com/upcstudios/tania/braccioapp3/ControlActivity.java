@@ -57,7 +57,7 @@ public class ControlActivity extends AppCompatActivity {
                             System.out.println("BT MESSAGE: " + newMessage);
                             ArrayList<String> array = new ArrayList<String>();
                             array.add("Echo1: "+newMessage);
-                            globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.SENDTEXT, array);
+                            globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.SENDTEXT, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.NULL, array);
                             controlHandler.obtainMessage(0, newMessage.length(),-1, newMessage).sendToTarget();
                         }
                         //receivedText.setText("Dato:" + newMessage);
@@ -87,7 +87,11 @@ public class ControlActivity extends AppCompatActivity {
             public void onClick(View view) {
                 ArrayList<String> array = new ArrayList<String>();
                 array.add("Hello");
-                globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.SENDTEXT, array);
+                globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.SENDTEXT, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.NULL, array);
+
+                /*array.clear();
+                array.add("Hello");
+                globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.SENDTO, BluetoothClass.Communications.COM_SERIAL, BluetoothClass.Joints.NULL, array);*/
             }
         });
 
@@ -124,6 +128,8 @@ public class ControlActivity extends AppCompatActivity {
 
         // The connection will be interrupted when going to the MainActivity
         if (close) {
+            ArrayList<String> array = new ArrayList<String>();
+            globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.DISCONNECT, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.NULL, array);
             globalClasses.MyBluetooth.CloseConnection();
             readBluetoothThread.interrupt();
         }
