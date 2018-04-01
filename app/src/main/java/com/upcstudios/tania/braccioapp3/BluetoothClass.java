@@ -21,11 +21,11 @@ public class BluetoothClass {
     public boolean BTConnected = false;
     public static final ConcurrentLinkedQueue<String> messageQueue = new ConcurrentLinkedQueue<>();
     public static final Object messageLock = new Object();
-    public enum Commands {NULL, CONNECT, DISCONNECT, REQUEST, SENDTEXT, SENDTO, JOG, MOVE}
-    public enum Communications{COM_NULL,COM_SERIAL, COM_BLUETOOTH}
-    public enum JogCommand {MINUS, EQU, PLUS}
+    public enum Commands {C_CONNECT, C_DISCONNECT, C_REQUEST, C_SENDTO, C_JOG, C_MOVE, C_NULL}
+    public enum Communications{COM_SERIAL, COM_BLUETOOTH,COM_NULL}
+    public enum JogCommand {JC_MINUS, JC_EQU, JC_PLUS, JC_NULL}
     public enum Joints{
-        NULL, BASE,SHOULDER, ELBOW, WRIST_VER, WRIST_ROT, GRIPPER
+        J_BASE, J_SHOULDER, J_ELBOW, J_WRIST_VER, J_WRIST_ROT, J_GRIPPER, J_NULL
         /*NULL(0), BASE(1),SHOULDER(2), ELBOW(3), WRIST_VER(4), WRIST_ROT(5), GRIPPER(6);
         private int value;
         private Joints(int val){
@@ -105,7 +105,7 @@ public class BluetoothClass {
             try {
                 BTSocket.connect();
                 ArrayList<String> array = new ArrayList<String>();
-                writeMessage(Commands.CONNECT, Communications.COM_NULL, BluetoothClass.Joints.NULL, array);
+                writeMessage(Commands.C_CONNECT, Communications.COM_BLUETOOTH, Joints.J_NULL, array);
             } catch (IOException e) {
                 Toast.makeText(BTContext, "Error connecting: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 try {
@@ -194,69 +194,66 @@ public class BluetoothClass {
         int arg1 = 0;
         int arg2 = 0;
         switch (command){
-            case NULL: break;
-            case CONNECT: data = "1";
+            case C_CONNECT: data = "0 1";
                 break;
-            case DISCONNECT: data = "2";
+            case C_DISCONNECT: data = "1 1";
                 break;
-            case REQUEST: data = "3";
+            case C_REQUEST: data = "2 1";
                 break;
-            case SENDTEXT: data = "4 ";
-                data = data.concat(arguments.get(0));
-                break;
-            case SENDTO: //SENDTO [COMMUNICATION, TEXT]
+            case C_SENDTO: //SENDTO [COMMUNICATION, TEXT]
                 switch (communication)
                 {
-                    case COM_NULL:
-                        break;
                     case COM_SERIAL:
-                        data = "5 0 ";
+                        data = "3 0 ";
                         data = data.concat(arguments.get(0));
                         break;
                     case COM_BLUETOOTH:
-                        data = "5 1 ";
+                        data = "3 1 ";
                         data = data.concat(arguments.get(0));
+                        break;
+                    case COM_NULL:
                         break;
                     default: break;
                 }
                 break;
-            case JOG:
+            case C_JOG:
                 arg1 = Integer.parseInt(arguments.get(0));
                 if(arg1 >= 0 && arg1 <= 2) {
                     switch (joint) {
-                        case NULL:
+                        case J_BASE:
+                            data = data.concat("4 0 " + arguments.get(0));
                             break;
-                        case BASE:
-                            data = data.concat("6 0 " + arguments.get(0));
+                        case J_SHOULDER:
+                            data = data.concat("4 1 " + arguments.get(0));
                             break;
-                        case SHOULDER:
-                            data = data.concat("6 1 " + arguments.get(0));
+                        case J_ELBOW:
+                            data = data.concat("4 2 " + arguments.get(0));
                             break;
-                        case ELBOW:
-                            data = data.concat("6 2 " + arguments.get(0));
+                        case J_WRIST_VER:
+                            data = data.concat("4 3 " + arguments.get(0));
                             break;
-                        case WRIST_VER:
-                            data = data.concat("6 3 " + arguments.get(0));
+                        case J_WRIST_ROT:
+                            data = data.concat("4 4 " + arguments.get(0));
                             break;
-                        case WRIST_ROT:
-                            data = data.concat("6 4 " + arguments.get(0));
+                        case J_GRIPPER:
+                            data = data.concat("4 5 " + arguments.get(0));
                             break;
-                        case GRIPPER:
-                            data = data.concat("6 5 " + arguments.get(0));
-                            break;
-                        default:
-                            break;
+                        case J_NULL: break;
+                        default: break;
                     }
                 }
                 break;
-            case MOVE:
+            /*case C_MOVE:
                 arg1 = Integer.parseInt(arguments.get(0));
                 if (arg1 > 0 && arg1 < Joints.values().length){
                     arg2 = Integer.parseInt(arguments.get(1));
-                    if(arg1 == 1 && (arg2 >= 0 && arg2 <= 180)){
+                    if(arg1 == 0 && (arg2 >= 0 && arg2 <= 180)){
                         data = data.concat("6 " + arguments.get(0) + " " + arguments.get(1));
                     }
-                    else if(arg1 == 2 && (arg2 >= 15 && arg2 <= 165)){
+                    else if(arg1 == 1 && (arg2 >= 15 && arg2 <= 165)){
+                        data = data.concat("6 " + arguments.get(0) + " " + arguments.get(1));
+                    }
+                    else if(arg1 == 2 && (arg2 >= 0 && arg2 <= 180)){
                         data = data.concat("6 " + arguments.get(0) + " " + arguments.get(1));
                     }
                     else if(arg1 == 3 && (arg2 >= 0 && arg2 <= 180)){
@@ -265,14 +262,12 @@ public class BluetoothClass {
                     else if(arg1 == 4 && (arg2 >= 0 && arg2 <= 180)){
                         data = data.concat("6 " + arguments.get(0) + " " + arguments.get(1));
                     }
-                    else if(arg1 == 5 && (arg2 >= 0 && arg2 <= 180)){
-                        data = data.concat("6 " + arguments.get(0) + " " + arguments.get(1));
-                    }
-                    else if(arg1 == 6 && (arg2 >= 10 && arg2 <= 73)){
+                    else if(arg1 == 5 && (arg2 >= 10 && arg2 <= 73)){
                         data = data.concat("6 " + arguments.get(0) + " " + arguments.get(1));
                     }
                 }
-                break;
+                break;*/
+            case C_NULL: break;
             default: break;
 
         }
