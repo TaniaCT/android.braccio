@@ -12,11 +12,10 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 public class JoggingActivity extends AppCompatActivity {
     GlobalClasses globalClasses;
-    Button testJoggingButton, jogMinusButton1, jogMinusButton2, jogMinusButton3, jogMinusButton4;
+    Button joggingTest, jogMinusButton1, jogMinusButton2, jogMinusButton3, jogMinusButton4;
     Button jogMinusButton5, jogMinusButton6, jogPlusButton1, jogPlusButton2, jogPlusButton3, jogPlusButton4;
     Button jogPlusButton5, jogPlusButton6;
     TextView receivedText2, textTarget1, textTarget2, textTarget3, textTarget4, textTarget5, textTarget6;
@@ -36,9 +35,9 @@ public class JoggingActivity extends AppCompatActivity {
         globalClasses = (GlobalClasses) getApplication();
         setContentView(R.layout.activity_jogging);
 
-        Resources res = getResources();
+        //Resources res = getResources();
 
-        testJoggingButton = findViewById(R.id.testJoggingButton);
+        joggingTest = findViewById(R.id.joggingTest);
         receivedText2 = findViewById(R.id.receivedText2);
         textTarget1 = findViewById(R.id.textTarget1);
         textTarget2 = findViewById(R.id.textTarget2);
@@ -146,11 +145,11 @@ public class JoggingActivity extends AppCompatActivity {
             }
         };
 
-        testJoggingButton.setOnClickListener(new View.OnClickListener() {
+        joggingTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<String> array = new ArrayList<String>();
-                array.add("Hello from jog");
+                if(!array.isEmpty()) array.clear();
+                array.add("Jogging Test");
                 globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_SENDTO, BluetoothClass.Communications.COM_SERIAL, BluetoothClass.Joints.J_NULL, array);
             }
         });
@@ -163,13 +162,15 @@ public class JoggingActivity extends AppCompatActivity {
                     if (current_button == CURRENT_BUTTON.NULL) {
                         current_button = CURRENT_BUTTON.BASE_M;
                         array.add("1");
-                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOG, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_BASE, array);
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOGGING, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_BASE, array);
                     }
                 } else if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     if(current_button == CURRENT_BUTTON.BASE_M) {
                         current_button = CURRENT_BUTTON.NULL;
                         array.add("0");
-                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOG, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_BASE, array);
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOGGING, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_BASE, array);
+                        array.clear(); //  <-- TODO: Para no pasar algo innecesario?
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_REQUEST, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_NULL, array);
                     }
                 }
                 return true;
@@ -184,13 +185,15 @@ public class JoggingActivity extends AppCompatActivity {
                     if (current_button == CURRENT_BUTTON.NULL) {
                         current_button = CURRENT_BUTTON.BASE_P;
                         array.add("2");
-                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOG, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_BASE, array);
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOGGING, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_BASE, array);
                     }
                 } else if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     if(current_button == CURRENT_BUTTON.BASE_P) {
                         current_button = CURRENT_BUTTON.NULL;
                         array.add("0");
-                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOG, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_BASE, array);
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOGGING, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_BASE, array);
+                        array.clear(); //  <-- TODO: Para no pasar algo innecesario?
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_REQUEST, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_NULL, array);
                     }
                 }
                 return true;
@@ -205,15 +208,15 @@ public class JoggingActivity extends AppCompatActivity {
                     if (current_button == CURRENT_BUTTON.NULL) {
                         current_button = CURRENT_BUTTON.SHOULDER_M;
                         array.add("1");
-                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOG, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_SHOULDER, array);
-                        //globalClasses.MyBluetooth.writeMessage("JOG Shoulder -1");
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOGGING, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_SHOULDER, array);
                     }
                 } else if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     if(current_button == CURRENT_BUTTON.SHOULDER_M) {
                         current_button = CURRENT_BUTTON.NULL;
                         array.add("0");
-                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOG, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_SHOULDER, array);
-                        //globalClasses.MyBluetooth.writeMessage("JOG Shoulder 0");
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOGGING, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_SHOULDER, array);
+                        array.clear(); //  <-- TODO: Para no pasar algo innecesario?
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_REQUEST, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_NULL, array);
                     }
                 }
                 return true;
@@ -228,15 +231,15 @@ public class JoggingActivity extends AppCompatActivity {
                     if (current_button == CURRENT_BUTTON.NULL) {
                         current_button = CURRENT_BUTTON.SHOULDER_P;
                         array.add("2");
-                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOG, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_SHOULDER, array);
-                        //globalClasses.MyBluetooth.writeMessage("JOG Shoulder +1");
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOGGING, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_SHOULDER, array);
                     }
                 } else if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     if(current_button == CURRENT_BUTTON.SHOULDER_P) {
                         current_button = CURRENT_BUTTON.NULL;
                         array.add("0");
-                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOG, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_SHOULDER, array);
-                        //globalClasses.MyBluetooth.writeMessage("JOG Shoulder 0");
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOGGING, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_SHOULDER, array);
+                        array.clear(); //  <-- TODO: Para no pasar algo innecesario?
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_REQUEST, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_NULL, array);;
                     }
                 }
                 return true;
@@ -251,15 +254,15 @@ public class JoggingActivity extends AppCompatActivity {
                     if (current_button == CURRENT_BUTTON.NULL) {
                         current_button = CURRENT_BUTTON.ELBOW_M;
                         array.add("1");
-                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOG, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_ELBOW, array);
-                        //globalClasses.MyBluetooth.writeMessage("JOG Elbow -1");
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOGGING, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_ELBOW, array);
                     }
                 } else if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     if(current_button == CURRENT_BUTTON.ELBOW_M) {
                         current_button = CURRENT_BUTTON.NULL;
                         array.add("0");
-                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOG, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_ELBOW, array);
-                        //globalClasses.MyBluetooth.writeMessage("JOG Elbow 0");
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOGGING, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_ELBOW, array);
+                        array.clear(); //  <-- TODO: Para no pasar algo innecesario?
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_REQUEST, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_NULL, array);
                     }
                 }
                 return true;
@@ -274,15 +277,15 @@ public class JoggingActivity extends AppCompatActivity {
                     if (current_button == CURRENT_BUTTON.NULL) {
                         current_button = CURRENT_BUTTON.ELBOW_P;
                         array.add("2");
-                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOG, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_ELBOW, array);
-                        //globalClasses.MyBluetooth.writeMessage("JOG Elbow +1");
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOGGING, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_ELBOW, array);
                     }
                 } else if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     if(current_button == CURRENT_BUTTON.ELBOW_P) {
                         current_button = CURRENT_BUTTON.NULL;
                         array.add("0");
-                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOG, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_ELBOW, array);
-                        //globalClasses.MyBluetooth.writeMessage("JOG Elbow 0");
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOGGING, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_ELBOW, array);
+                        array.clear(); //  <-- TODO: Para no pasar algo innecesario?
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_REQUEST, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_NULL, array);
                     }
                 }
                 return true;
@@ -297,15 +300,15 @@ public class JoggingActivity extends AppCompatActivity {
                     if (current_button == CURRENT_BUTTON.NULL) {
                         current_button = CURRENT_BUTTON.WRIST_VER_M;
                         array.add("1");
-                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOG, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_WRIST_VER, array);
-                        //globalClasses.MyBluetooth.writeMessage("JOG Wrist_ver -1");
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOGGING, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_WRIST_VER, array);
                     }
                 } else if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     if(current_button == CURRENT_BUTTON.WRIST_VER_M) {
                         current_button = CURRENT_BUTTON.NULL;
                         array.add("0");
-                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOG, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_WRIST_VER, array);
-                        //globalClasses.MyBluetooth.writeMessage("JOG Wrist_ver 0");
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOGGING, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_WRIST_VER, array);
+                        array.clear(); //  <-- TODO: Para no pasar algo innecesario?
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_REQUEST, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_NULL, array);
                     }
                 }
                 return true;
@@ -320,15 +323,15 @@ public class JoggingActivity extends AppCompatActivity {
                     if (current_button == CURRENT_BUTTON.NULL) {
                         current_button = CURRENT_BUTTON.WRIST_VER_P;
                         array.add("2");
-                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOG, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_WRIST_VER, array);
-                        //globalClasses.MyBluetooth.writeMessage("JOG Wrist_ver +1");
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOGGING, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_WRIST_VER, array);
                     }
                 } else if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     if(current_button == CURRENT_BUTTON.WRIST_VER_P) {
                         current_button = CURRENT_BUTTON.NULL;
                         array.add("0");
-                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOG, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_WRIST_VER, array);
-                        //globalClasses.MyBluetooth.writeMessage("JOG Wrist_ver 0");
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOGGING, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_WRIST_VER, array);
+                        array.clear(); //  <-- TODO: Para no pasar algo innecesario?
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_REQUEST, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_NULL, array);
                     }
                 }
                 return true;
@@ -343,15 +346,15 @@ public class JoggingActivity extends AppCompatActivity {
                     if (current_button == CURRENT_BUTTON.NULL) {
                         current_button = CURRENT_BUTTON.WRIST_ROT_M;
                         array.add("1");
-                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOG, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_WRIST_ROT, array);
-                        //globalClasses.MyBluetooth.writeMessage("JOG Wrist_rot -1");
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOGGING, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_WRIST_ROT, array);
                     }
                 } else if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     if(current_button == CURRENT_BUTTON.WRIST_ROT_M) {
                         current_button = CURRENT_BUTTON.NULL;
                         array.add("0");
-                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOG, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_WRIST_ROT, array);
-                        //globalClasses.MyBluetooth.writeMessage("JOG Wrist_rot 0");
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOGGING, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_WRIST_ROT, array);
+                        array.clear(); //  <-- TODO: Para no pasar algo innecesario?
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_REQUEST, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_NULL, array);
                     }
                 }
                 return true;
@@ -366,15 +369,15 @@ public class JoggingActivity extends AppCompatActivity {
                     if (current_button == CURRENT_BUTTON.NULL) {
                         current_button = CURRENT_BUTTON.WRIST_ROT_P;
                         array.add("2");
-                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOG, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_WRIST_ROT, array);
-                        //globalClasses.MyBluetooth.writeMessage("JOG Wrist_rot +1");
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOGGING, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_WRIST_ROT, array);
                     }
                 } else if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     if(current_button == CURRENT_BUTTON.WRIST_ROT_P) {
                         current_button = CURRENT_BUTTON.NULL;
                         array.add("0");
-                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOG, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_WRIST_ROT, array);
-                        //globalClasses.MyBluetooth.writeMessage("JOG Wrist_rot 0");
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOGGING, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_WRIST_ROT, array);
+                        array.clear(); //  <-- TODO: Para no pasar algo innecesario?
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_REQUEST, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_NULL, array);
                     }
                 }
                 return true;
@@ -389,15 +392,15 @@ public class JoggingActivity extends AppCompatActivity {
                     if (current_button == CURRENT_BUTTON.NULL) {
                         current_button = CURRENT_BUTTON.GRIPPER_M;
                         array.add("1");
-                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOG, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_GRIPPER, array);
-                        //globalClasses.MyBluetooth.writeMessage("JOG Gripper -1");
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOGGING, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_GRIPPER, array);
                     }
                 } else if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     if(current_button == CURRENT_BUTTON.GRIPPER_M) {
                         current_button = CURRENT_BUTTON.NULL;
                         array.add("0");
-                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOG, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_GRIPPER, array);
-                        //globalClasses.MyBluetooth.writeMessage("JOG Gripper 0");
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOGGING, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_GRIPPER, array);
+                        array.clear(); //  <-- TODO: Para no pasar algo innecesario?
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_REQUEST, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_NULL, array);
                     }
                 }
                 return true;
@@ -412,15 +415,15 @@ public class JoggingActivity extends AppCompatActivity {
                     if (current_button == CURRENT_BUTTON.NULL) {
                         current_button = CURRENT_BUTTON.GRIPPER_P;
                         array.add("2");
-                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOG, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_GRIPPER, array);
-                        //globalClasses.MyBluetooth.writeMessage("JOG Gripper +1");
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOGGING, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_GRIPPER, array);
                     }
                 } else if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     if(current_button == CURRENT_BUTTON.GRIPPER_P) {
                         current_button = CURRENT_BUTTON.NULL;
                         array.add("0");
-                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOG, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_GRIPPER, array);
-                        //globalClasses.MyBluetooth.writeMessage("JOG Gripper 0");
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_JOGGING, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_GRIPPER, array);
+                        array.clear(); //  <-- TODO: Para no pasar algo innecesario?
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_REQUEST, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_NULL, array);
                     }
                 }
                 return true;

@@ -86,7 +86,7 @@ public class ControlActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 ArrayList<String> array = new ArrayList<String>();
-                array.add("Hello");
+                array.add("Test");
                 globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_SENDTO, BluetoothClass.Communications.COM_SERIAL, BluetoothClass.Joints.J_NULL, array);
 
                 /*array.clear();
@@ -107,6 +107,9 @@ public class ControlActivity extends AppCompatActivity {
         programButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                close = false;
+                Intent intent = new Intent(ControlActivity.this, ProgramActivity.class);
+                startActivity(intent);
 
             }
         });

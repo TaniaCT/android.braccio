@@ -22,6 +22,7 @@
         </activity>
         <activity android:name=".ControlActivity" />
         <activity android:name=".JoggingActivity" />
+        <activity android:name=".ProgramActivity"></activity>
     </application>
 
 </manifest>

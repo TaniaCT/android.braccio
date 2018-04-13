@@ -21,7 +21,7 @@ public class BluetoothClass {
     public boolean BTConnected = false;
     public static final ConcurrentLinkedQueue<String> messageQueue = new ConcurrentLinkedQueue<>();
     public static final Object messageLock = new Object();
-    public enum Commands {C_CONNECT, C_DISCONNECT, C_REQUEST, C_SENDTO, C_JOG, C_MOVE, C_NULL}
+    public enum Commands {C_CONNECT, C_DISCONNECT, C_REQUEST, C_SENDTO, C_JOGGING, C_MOVE, C_HAND, C_NULL}
     public enum Communications{COM_SERIAL, COM_BLUETOOTH,COM_NULL}
     public enum JogCommand {JC_MINUS, JC_EQU, JC_PLUS, JC_NULL}
     public enum Joints{
@@ -181,15 +181,32 @@ public class BluetoothClass {
         try {
             if(BTSocket != null && mmOutStream == null)
                 mmOutStream = BTSocket.getOutputStream();
-            String data = CommandsToSend(command, communication, joint, arguments);
-            if (data != "") mmOutStream.write(data.getBytes());
+            String data = ProcessCommands(command, communication, joint, arguments);
+            if (data != "") {
+                data = data.concat("#");
+                mmOutStream.write(data.getBytes());
+            }
 
         } catch (IOException e) {
             System.out.println("BTConnection: Error writting to BT");
         }
     }
 
-    private String CommandsToSend (Commands command, Communications communication, Joints joint, ArrayList<String> arguments) {
+    public void writeMessage(String data) {
+        try {
+            if(BTSocket != null && mmOutStream == null)
+                mmOutStream = BTSocket.getOutputStream();
+            if (data != "") {
+                data = data.concat("#");
+                mmOutStream.write(data.getBytes());
+            }
+
+        } catch (IOException e) {
+            System.out.println("BTConnection: Error writting to BT");
+        }
+    }
+
+    public String ProcessCommands (Commands command, Communications communication, Joints joint, ArrayList<String> arguments) {
         String data = "";
         int arg1 = 0;
         int arg2 = 0;
@@ -216,7 +233,7 @@ public class BluetoothClass {
                     default: break;
                 }
                 break;
-            case C_JOG:
+            case C_JOGGING:
                 arg1 = Integer.parseInt(arguments.get(0));
                 if(arg1 >= 0 && arg1 <= 2) {
                     switch (joint) {
@@ -243,6 +260,30 @@ public class BluetoothClass {
                     }
                 }
                 break;
+            case C_MOVE: //TODO: AÑADIR X Y Z Y POSICIONES DISPONIBLES
+                switch (joint) {
+                    case J_BASE:
+                        data = data.concat("5 0 " + arguments.get(0));
+                        break;
+                    case J_SHOULDER:
+                        data = data.concat("5 1 " + arguments.get(0));
+                        break;
+                    case J_ELBOW:
+                        data = data.concat("5 2 " + arguments.get(0));
+                        break;
+                    case J_WRIST_VER:
+                        data = data.concat("5 3 " + arguments.get(0));
+                        break;
+                    case J_WRIST_ROT:
+                        data = data.concat("5 4 " + arguments.get(0));
+                        break;
+                    case J_GRIPPER:
+                        data = data.concat("5 5 " + arguments.get(0));
+                        break;
+                    case J_NULL: break;
+                    default: break;
+                }
+                break;
             /*case C_MOVE:
                 arg1 = Integer.parseInt(arguments.get(0));
                 if (arg1 > 0 && arg1 < Joints.values().length){
@@ -267,6 +308,9 @@ public class BluetoothClass {
                     }
                 }
                 break;*/
+            case C_HAND:
+                data = data.concat("6 " + arguments.get(0));
+                break;
             case C_NULL: break;
             default: break;
 
