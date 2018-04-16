@@ -8,8 +8,10 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -17,9 +19,10 @@ public class JoggingActivity extends AppCompatActivity {
     GlobalClasses globalClasses;
     Button joggingTest, jogMinusButton1, jogMinusButton2, jogMinusButton3, jogMinusButton4;
     Button jogMinusButton5, jogMinusButton6, jogPlusButton1, jogPlusButton2, jogPlusButton3, jogPlusButton4;
-    Button jogPlusButton5, jogPlusButton6;
+    Button jogPlusButton5, jogPlusButton6, buttonSavePosition;
     TextView receivedText2, textTarget1, textTarget2, textTarget3, textTarget4, textTarget5, textTarget6;
     TextView textCurr1, textCurr2, textCurr3, textCurr4, textCurr5, textCurr6;
+    EditText textSavePos;
     Handler joggingHandler;
     TabHost tabs;
     public enum CURRENT_BUTTON {NULL, BASE_P, BASE_M, SHOULDER_P, SHOULDER_M, ELBOW_P, ELBOW_M,
@@ -63,6 +66,8 @@ public class JoggingActivity extends AppCompatActivity {
         jogPlusButton4 = findViewById(R.id.jogPlusButton4);
         jogPlusButton5 = findViewById(R.id.jogPlusButton5);
         jogPlusButton6 = findViewById(R.id.jogPlusButton6);
+        buttonSavePosition = findViewById(R.id.buttonSavePosition);
+        textSavePos = findViewById(R.id.textSavePos);
         tabs = findViewById(R.id.joggingTabs);
 
         //-------- Tab Setup -----
@@ -427,6 +432,26 @@ public class JoggingActivity extends AppCompatActivity {
                     }
                 }
                 return true;
+            }
+        });
+
+        buttonSavePosition.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(textSavePos.getText().length() == 0){
+                    Toast.makeText(JoggingActivity.this, "Select a name for the current position" , Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    int position = (Integer.parseInt(textSavePos.getText().toString())-1)*6;
+                    for (int i = 0; i < 6;i++){
+                        if (i == 0) globalClasses.positions[position+i] = Integer.parseInt(textCurr1.getText().toString());
+                        else if (i == 1) globalClasses.positions[position+i] = Integer.parseInt(textCurr2.getText().toString());
+                        else if (i == 2) globalClasses.positions[position+i] = Integer.parseInt(textCurr3.getText().toString());
+                        else if (i == 3) globalClasses.positions[position+i] = Integer.parseInt(textCurr4.getText().toString());
+                        else if (i == 4) globalClasses.positions[position+i] = Integer.parseInt(textCurr5.getText().toString());
+                        else if (i == 5) globalClasses.positions[position+i] = Integer.parseInt(textCurr6.getText().toString());
+                    }
+                }
             }
         });
     }

@@ -72,7 +72,7 @@ public class ProgramActivity extends AppCompatActivity {
                 if (msg.what  == 0) {
                     String readMessage = (String) msg.obj;
                     if (readMessage.equals("Free")) {
-                        globalClasses.ArduinoFree = true;
+                        //globalClasses.arduinoFree = true;
                         sendCommand();
                     }
                     //String[] tokens = readMessage.split(" ");
@@ -333,7 +333,7 @@ public class ProgramActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 globalClasses.MyBluetooth.writeMessage(globalClasses.CommandArray.get(send_command_pos));
-                globalClasses.ArduinoFree = false;
+                //globalClasses.arduinoFree = false;
                 send_command_pos++;
                 buttonStop.setEnabled(true);
                 /*for(int i = 0; i<globalClasses.CommandArray.size();i++){
@@ -370,9 +370,9 @@ public class ProgramActivity extends AppCompatActivity {
     }
 
     private void sendCommand(){
-        if (send_command_pos < globalClasses.CommandArray.size() && globalClasses.ArduinoFree){
+        if (send_command_pos < globalClasses.CommandArray.size() /*&& globalClasses.arduinoFree*/){
             globalClasses.MyBluetooth.writeMessage(globalClasses.CommandArray.get(send_command_pos));
-            globalClasses.ArduinoFree = false;
+            //globalClasses.arduinoFree = false;
             send_command_pos++;
         }
         else {
