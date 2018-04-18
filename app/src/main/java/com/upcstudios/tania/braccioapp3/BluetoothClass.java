@@ -21,19 +21,11 @@ public class BluetoothClass {
     public boolean BTConnected = false;
     public static final ConcurrentLinkedQueue<String> messageQueue = new ConcurrentLinkedQueue<>();
     public static final Object messageLock = new Object();
-    public enum Commands {C_CONNECT, C_DISCONNECT, C_REQUEST, C_SENDTO, C_JOGGING, C_MOVE, C_HAND, C_NULL}
+    public enum Commands {C_CONNECT, C_DISCONNECT, C_REQUEST, C_SENDTO, C_JOGGING, C_MOVE, C_HAND, C_SAVEPOS, C_STOP, C_NULL}
     public enum Communications{COM_SERIAL, COM_BLUETOOTH,COM_NULL}
     public enum JogCommand {JC_MINUS, JC_EQU, JC_PLUS, JC_NULL}
     public enum Joints{
         J_BASE, J_SHOULDER, J_ELBOW, J_WRIST_VER, J_WRIST_ROT, J_GRIPPER, J_NULL
-        /*NULL(0), BASE(1),SHOULDER(2), ELBOW(3), WRIST_VER(4), WRIST_ROT(5), GRIPPER(6);
-        private int value;
-        private Joints(int val){
-            value = val;
-        }
-        public int getValue() {
-            return value;
-        }*/
     }
 
     private Context BTContext;
@@ -280,7 +272,20 @@ public class BluetoothClass {
                     case J_GRIPPER:
                         data = data.concat("5 5 " + arguments.get(0));
                         break;
-                    case J_NULL: break;
+                    case J_NULL:
+                        if (arguments.get(0).equals("X")){
+
+                        }
+                        else if (arguments.get(0).equals("Y")){
+
+                        }
+                        else if (arguments.get(0).equals("Z")){
+
+                        }
+                        else if (arguments.get(0).equals("P")){
+                            data = data.concat("5 9 " + arguments.get(1));
+                        }
+                        break;
                     default: break;
                 }
                 break;
@@ -310,6 +315,12 @@ public class BluetoothClass {
                 break;*/
             case C_HAND:
                 data = data.concat("6 " + arguments.get(0));
+                break;
+            case C_SAVEPOS:
+                data = data.concat("7 " + arguments.get(0));
+                break;
+            case C_STOP:
+                data = data.concat("8");
                 break;
             case C_NULL: break;
             default: break;

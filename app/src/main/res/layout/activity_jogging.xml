@@ -458,7 +458,7 @@
                             android:layout_marginLeft="10dp"
                             android:layout_weight="1"
                             android:backgroundTint="@android:color/transparent"
-                            android:digits="123456"
+                            android:digits="012345"
                             android:ems="10"
                             android:hint="Position"
                             android:inputType="number"

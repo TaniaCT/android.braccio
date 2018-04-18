@@ -152,129 +152,126 @@ public class ProgramActivity extends AppCompatActivity {
                         temp.clear();
 
                         if (argTokens[0].equals("MOV")){
-                            if (argTokens[1].equals("M1")){
-                                int myNum = 0;
 
-                                try{
-                                    myNum = Integer.parseInt(argTokens[2]);
-                                    if (myNum >= 0 && myNum <= 180){
-                                        //TODO M1
-                                        temp.add(argTokens[2]);
-                                        globalClasses.CommandArray.add(globalClasses.MyBluetooth.ProcessCommands(BluetoothClass.Commands.C_MOVE, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_BASE, temp));
-                                        //System.out.println(argTokens[2]);
-                                    }
-                                    else{
+                            if (argTokens[1].startsWith("M")){
+                                if (argTokens[1].equals("M1")){
+                                    int myNum = 0;
+
+                                    try{
+                                        myNum = Integer.parseInt(argTokens[2]);
+                                        if (myNum >= 0 && myNum <= 180){
+                                            //TODO M1
+                                            temp.add(argTokens[2]);
+                                            globalClasses.CommandArray.add(globalClasses.MyBluetooth.ProcessCommands(BluetoothClass.Commands.C_MOVE, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_BASE, temp));
+                                        }
+                                        else{
+                                            Toast.makeText(ProgramActivity.this, "Invalid argument at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
+                                            break;
+                                        }
+                                    } catch (NumberFormatException nfe){
                                         Toast.makeText(ProgramActivity.this, "Invalid argument at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
                                         break;
                                     }
-                                } catch (NumberFormatException nfe){
-                                    Toast.makeText(ProgramActivity.this, "Invalid argument at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
-                                    break;
                                 }
-                            }
-                            else if (argTokens[1].equals("M2")){
-                                int myNum = 0;
+                                else if (argTokens[1].equals("M2")){
+                                    int myNum = 0;
 
-                                try{
-                                    myNum = Integer.parseInt(argTokens[2]);
-                                    if (myNum >= 15 && myNum <= 165){
-                                        //TODO M2
-                                        temp.add(argTokens[2]);
-                                        globalClasses.CommandArray.add(globalClasses.MyBluetooth.ProcessCommands(BluetoothClass.Commands.C_MOVE, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_SHOULDER, temp));
-                                        //System.out.println(argTokens[2]);
-                                    }
-                                    else{
+                                    try{
+                                        myNum = Integer.parseInt(argTokens[2]);
+                                        if (myNum >= 15 && myNum <= 165){
+                                            //TODO M2
+                                            temp.add(argTokens[2]);
+                                            globalClasses.CommandArray.add(globalClasses.MyBluetooth.ProcessCommands(BluetoothClass.Commands.C_MOVE, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_SHOULDER, temp));
+                                        }
+                                        else{
+                                            Toast.makeText(ProgramActivity.this, "Invalid argument at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
+                                            break;
+                                        }
+                                    } catch (NumberFormatException nfe){
                                         Toast.makeText(ProgramActivity.this, "Invalid argument at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
                                         break;
                                     }
-                                } catch (NumberFormatException nfe){
-                                    Toast.makeText(ProgramActivity.this, "Invalid argument at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
-                                    break;
                                 }
-                            }
-                            else if (argTokens[1].equals("M3")){
-                                int myNum = 0;
+                                else if (argTokens[1].equals("M3")){
+                                    int myNum = 0;
 
-                                try{
-                                    myNum = Integer.parseInt(argTokens[2]);
-                                    if (myNum >= 0 && myNum <= 180){
-                                        //TODO M3
-                                        temp.add(argTokens[2]);
-                                        globalClasses.CommandArray.add(globalClasses.MyBluetooth.ProcessCommands(BluetoothClass.Commands.C_MOVE, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_ELBOW, temp));
-                                        //System.out.println(argTokens[2]);
-                                    }
-                                    else{
+                                    try{
+                                        myNum = Integer.parseInt(argTokens[2]);
+                                        if (myNum >= 0 && myNum <= 180){
+                                            //TODO M3
+                                            temp.add(argTokens[2]);
+                                            globalClasses.CommandArray.add(globalClasses.MyBluetooth.ProcessCommands(BluetoothClass.Commands.C_MOVE, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_ELBOW, temp));
+                                        }
+                                        else{
+                                            Toast.makeText(ProgramActivity.this, "Invalid argument at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
+                                            break;
+                                        }
+                                    } catch (NumberFormatException nfe){
                                         Toast.makeText(ProgramActivity.this, "Invalid argument at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
                                         break;
                                     }
-                                } catch (NumberFormatException nfe){
-                                    Toast.makeText(ProgramActivity.this, "Invalid argument at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
-                                    break;
                                 }
-                            }
-                            else if (argTokens[1].equals("M4")){
-                                int myNum = 0;
+                                else if (argTokens[1].equals("M4")){
+                                    int myNum = 0;
 
-                                try{
-                                    myNum = Integer.parseInt(argTokens[2]);
-                                    if (myNum >= 0 && myNum <= 180){
-                                        //TODO M4
-                                        temp.add(argTokens[2]);
-                                        globalClasses.CommandArray.add(globalClasses.MyBluetooth.ProcessCommands(BluetoothClass.Commands.C_MOVE, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_WRIST_VER, temp));
-                                        //System.out.println(argTokens[2]);
-                                    }
-                                    else{
+                                    try{
+                                        myNum = Integer.parseInt(argTokens[2]);
+                                        if (myNum >= 0 && myNum <= 180){
+                                            //TODO M4
+                                            temp.add(argTokens[2]);
+                                            globalClasses.CommandArray.add(globalClasses.MyBluetooth.ProcessCommands(BluetoothClass.Commands.C_MOVE, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_WRIST_VER, temp));
+                                        }
+                                        else{
+                                            Toast.makeText(ProgramActivity.this, "Invalid argument at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
+                                            break;
+                                        }
+                                    } catch (NumberFormatException nfe){
                                         Toast.makeText(ProgramActivity.this, "Invalid argument at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
                                         break;
                                     }
-                                } catch (NumberFormatException nfe){
-                                    Toast.makeText(ProgramActivity.this, "Invalid argument at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
-                                    break;
                                 }
-                            }
-                            else if (argTokens[1].equals("M5")){
-                                int myNum = 0;
+                                else if (argTokens[1].equals("M5")){
+                                    int myNum = 0;
 
-                                try{
-                                    myNum = Integer.parseInt(argTokens[2]);
-                                    if (myNum >= 0 && myNum <= 180){
-                                        //TODO M5
-                                        temp.add(argTokens[2]);
-                                        globalClasses.CommandArray.add(globalClasses.MyBluetooth.ProcessCommands(BluetoothClass.Commands.C_MOVE, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_WRIST_ROT, temp));
-                                        //System.out.println(argTokens[2]);
-                                    }
-                                    else{
+                                    try{
+                                        myNum = Integer.parseInt(argTokens[2]);
+                                        if (myNum >= 0 && myNum <= 180){
+                                            //TODO M5
+                                            temp.add(argTokens[2]);
+                                            globalClasses.CommandArray.add(globalClasses.MyBluetooth.ProcessCommands(BluetoothClass.Commands.C_MOVE, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_WRIST_ROT, temp));
+                                        }
+                                        else{
+                                            Toast.makeText(ProgramActivity.this, "Invalid argument at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
+                                            break;
+                                        }
+                                    } catch (NumberFormatException nfe){
                                         Toast.makeText(ProgramActivity.this, "Invalid argument at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
                                         break;
                                     }
-                                } catch (NumberFormatException nfe){
-                                    Toast.makeText(ProgramActivity.this, "Invalid argument at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
-                                    break;
                                 }
-                            }
-                            else if (argTokens[1].equals("M6")){
-                                int myNum = 0;
+                                else if (argTokens[1].equals("M6")){
+                                    int myNum = 0;
 
-                                try{
-                                    myNum = Integer.parseInt(argTokens[2]);
-                                    if (myNum >= 10 && myNum <= 73){
-                                        //TODO M6
-                                        temp.add(argTokens[2]);
-                                        globalClasses.CommandArray.add(globalClasses.MyBluetooth.ProcessCommands(BluetoothClass.Commands.C_MOVE, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_GRIPPER, temp));
-                                        //System.out.println(argTokens[2]);
-                                    }
-                                    else{
+                                    try{
+                                        myNum = Integer.parseInt(argTokens[2]);
+                                        if (myNum >= 10 && myNum <= 73){
+                                            //TODO M6
+                                            temp.add(argTokens[2]);
+                                            globalClasses.CommandArray.add(globalClasses.MyBluetooth.ProcessCommands(BluetoothClass.Commands.C_MOVE, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_GRIPPER, temp));
+                                        }
+                                        else{
+                                            Toast.makeText(ProgramActivity.this, "Invalid argument at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
+                                            break;
+                                        }
+                                    } catch (NumberFormatException nfe){
                                         Toast.makeText(ProgramActivity.this, "Invalid argument at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
                                         break;
                                     }
-                                } catch (NumberFormatException nfe){
-                                    Toast.makeText(ProgramActivity.this, "Invalid argument at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                    Toast.makeText(ProgramActivity.this, "No such motor at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
                                     break;
                                 }
-                            }
-                            else if (argTokens[1].startsWith("M") && !argTokens[1].equals("M1") && !argTokens[1].equals("M2") && !argTokens[1].equals("M3") && !argTokens[1].equals("M4") && !argTokens[1].equals("M5") && !argTokens[1].equals("M6")){
-                                Toast.makeText(ProgramActivity.this, "No such motor at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
-                                break;
                             }
                             else if (argTokens[1].equals("X")){
                                 //TODO SET X
@@ -286,6 +283,24 @@ public class ProgramActivity extends AppCompatActivity {
                                 //TODO SET Z
                             }
                             else if (argTokens[1].startsWith("P")){
+                                int myNum = 0;
+                                try {
+                                    myNum = Integer.parseInt(argTokens[1].substring(1));
+                                    if (myNum >= 0 && myNum < 6){
+                                        int position;
+                                        for (position = 0; position < 6; position++){
+                                            if (globalClasses.positions[myNum*6+position] == -1) break;
+                                        }
+                                        if (position < 6) Toast.makeText(ProgramActivity.this, "The selected position at line " + String.valueOf(i+1) + " does not exist", Toast.LENGTH_SHORT).show();
+                                        else {
+                                            temp.add(argTokens[1].substring(0,1));
+                                            temp.add(argTokens[1].substring(1));
+                                            globalClasses.CommandArray.add(globalClasses.MyBluetooth.ProcessCommands(BluetoothClass.Commands.C_MOVE, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_NULL, temp));
+                                        }
+                                    }
+                                } catch (NumberFormatException nfe){
+                                    Toast.makeText(ProgramActivity.this, "Insert a valid position at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
+                                }
                                 // TODO: Comprobar si es una posicion disponible y si no lo es poner el Toast de que no son validos los argumentos+break
                             }
                             else{
@@ -313,17 +328,19 @@ public class ProgramActivity extends AppCompatActivity {
                         Toast.makeText(ProgramActivity.this, "Missing ;", Toast.LENGTH_SHORT).show();
                         break;
                     }
-
-                    if (i == codeTokens.length-1){
-                        //globalClasses.CommandArray.add("9 1"); //9: program 1: end
-                        globalClasses.Code = inputCode.getText().toString();
-                        buttonSend.setEnabled(true);
-                    }
                 }
 
                 if(globalClasses.CommandArray.size() < codeTokens.length) {
                     globalClasses.CommandArray.clear();
-                    if(buttonSend.isEnabled()) buttonSend.setEnabled(false);
+                    if(buttonSend.isEnabled()) {
+                        buttonSend.setEnabled(false);
+                        buttonStop.setEnabled(false);
+                    }
+                }
+                else {
+                    //globalClasses.CommandArray.add("9 1"); //9: program 1: end
+                    globalClasses.Code = inputCode.getText().toString();
+                    buttonSend.setEnabled(true);
                 }
             }
         });
@@ -346,6 +363,8 @@ public class ProgramActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // TODO: send stop!
+                ArrayList<String> temp = new ArrayList<>();
+                globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_STOP, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_NULL, temp);
                 buttonStop.setEnabled(false); //TODO: después del free por parar, deshabilitar, no solo con tocar
             }
         });
