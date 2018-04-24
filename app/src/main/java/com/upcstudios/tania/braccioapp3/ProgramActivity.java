@@ -254,7 +254,7 @@ public class ProgramActivity extends AppCompatActivity {
 
                                     try{
                                         myNum = Integer.parseInt(argTokens[2]);
-                                        if (myNum >= 10 && myNum <= 73){
+                                        if (myNum >= 10 && myNum <= 65){
                                             //TODO M6
                                             temp.add(argTokens[2]);
                                             globalClasses.CommandArray.add(globalClasses.MyBluetooth.ProcessCommands(BluetoothClass.Commands.C_MOVE, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_GRIPPER, temp));
