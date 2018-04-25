@@ -16,8 +16,7 @@ public class ControlActivity extends AppCompatActivity {
 
     private boolean close;
     GlobalClasses globalClasses;
-    TextView receivedText;
-    Button testControlButton, joggingButton, programButton;
+    Button joggingButton, programButton;
     Handler controlHandler;
 
     private Thread readBluetoothThread;
@@ -31,8 +30,6 @@ public class ControlActivity extends AppCompatActivity {
 
         globalClasses.MyBluetooth.VerifyBT();
 
-        receivedText = findViewById(R.id.receivedText);
-        testControlButton = findViewById(R.id.testControlButton);
         joggingButton = findViewById(R.id.joggingButton);
         programButton = findViewById(R.id.programButton);
 
@@ -77,23 +74,10 @@ public class ControlActivity extends AppCompatActivity {
 
                 if (msg.what == 0) {
                     String readMessage = (String) msg.obj;
-                    receivedText.setText("Data: " + readMessage);
+                    // If something is need to do with the message, write it here
                 }
             }
         };
-
-        testControlButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ArrayList<String> array = new ArrayList<String>();
-                array.add("Test");
-                globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_SENDTO, BluetoothClass.Communications.COM_SERIAL, BluetoothClass.Joints.J_NULL, array);
-
-                /*array.clear();
-                array.add("Hello");
-                globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_SENDTO, BluetoothClass.Communications.COM_SERIAL, BluetoothClass.Joints.J_NULL, array);*/
-            }
-        });
 
         joggingButton.setOnClickListener(new View.OnClickListener() {
             @Override

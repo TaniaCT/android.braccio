@@ -23,8 +23,7 @@ import java.util.Arrays;
 public class ProgramActivity extends AppCompatActivity {
     GlobalClasses globalClasses;
     EditText inputCode, fileName;
-    TextView receivedText;
-    Button programTest, buttonProcess, buttonSend, buttonStop, buttonSave, buttonImport;
+    Button buttonProcess, buttonSend, buttonStop, buttonSave, buttonImport;
 
     int send_command_pos = 0;
     int max_lines = 20;
@@ -39,8 +38,6 @@ public class ProgramActivity extends AppCompatActivity {
 
         inputCode = findViewById(R.id.codeInput);
         fileName = findViewById(R.id.fileName);
-        receivedText = findViewById(R.id.receivedText);
-        programTest = findViewById(R.id.programTest);
         buttonProcess = findViewById(R.id.buttonProcess);
         buttonSend = findViewById(R.id.buttonSend);
         buttonStop = findViewById(R.id.buttonStop);
@@ -81,23 +78,12 @@ public class ProgramActivity extends AppCompatActivity {
 
                 if (msg.what  == 0) {
                     String readMessage = (String) msg.obj;
-                    if (readMessage.equals("Free")) {
-                        //globalClasses.arduinoFree = true;
+                    if (readMessage.equals("Free") && buttonStop.isEnabled()) {
                         sendCommand();
                     }
-                    receivedText.setText("Data: " + readMessage);
                 }
             }
         };
-
-        programTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ArrayList<String> array = new ArrayList<>();
-                array.add("Program Test");
-                globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_SENDTO, BluetoothClass.Communications.COM_SERIAL, BluetoothClass.Joints.J_NULL, array);
-            }
-        });
 
         inputCode.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -115,7 +101,6 @@ public class ProgramActivity extends AppCompatActivity {
         buttonProcess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (receivedText.getText() != "Data: ") receivedText.setText("Data: ");
                 ArrayList<String> temp = new ArrayList<>();
                 String codeTokens[] = inputCode.getText().toString().split("\n");
 
@@ -163,11 +148,11 @@ public class ProgramActivity extends AppCompatActivity {
                                             globalClasses.CommandArray.add(globalClasses.MyBluetooth.ProcessCommands(BluetoothClass.Commands.C_MOVE, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_BASE, temp));
                                         }
                                         else{
-                                            Toast.makeText(ProgramActivity.this, "Invalid argument at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(ProgramActivity.this, "Invalid angle at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
                                             break;
                                         }
                                     } catch (NumberFormatException nfe){
-                                        Toast.makeText(ProgramActivity.this, "Invalid argument at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(ProgramActivity.this, "Missing angle at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
                                         break;
                                     }
                                 }
@@ -182,11 +167,11 @@ public class ProgramActivity extends AppCompatActivity {
                                             globalClasses.CommandArray.add(globalClasses.MyBluetooth.ProcessCommands(BluetoothClass.Commands.C_MOVE, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_SHOULDER, temp));
                                         }
                                         else{
-                                            Toast.makeText(ProgramActivity.this, "Invalid argument at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(ProgramActivity.this, "Invalid angle at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
                                             break;
                                         }
                                     } catch (NumberFormatException nfe){
-                                        Toast.makeText(ProgramActivity.this, "Invalid argument at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(ProgramActivity.this, "Missing angle at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
                                         break;
                                     }
                                 }
@@ -201,11 +186,11 @@ public class ProgramActivity extends AppCompatActivity {
                                             globalClasses.CommandArray.add(globalClasses.MyBluetooth.ProcessCommands(BluetoothClass.Commands.C_MOVE, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_ELBOW, temp));
                                         }
                                         else{
-                                            Toast.makeText(ProgramActivity.this, "Invalid argument at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(ProgramActivity.this, "Invalid angle at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
                                             break;
                                         }
                                     } catch (NumberFormatException nfe){
-                                        Toast.makeText(ProgramActivity.this, "Invalid argument at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(ProgramActivity.this, "Missing angle at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
                                         break;
                                     }
                                 }
@@ -220,11 +205,11 @@ public class ProgramActivity extends AppCompatActivity {
                                             globalClasses.CommandArray.add(globalClasses.MyBluetooth.ProcessCommands(BluetoothClass.Commands.C_MOVE, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_WRIST_VER, temp));
                                         }
                                         else{
-                                            Toast.makeText(ProgramActivity.this, "Invalid argument at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(ProgramActivity.this, "Invalid angle at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
                                             break;
                                         }
                                     } catch (NumberFormatException nfe){
-                                        Toast.makeText(ProgramActivity.this, "Invalid argument at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(ProgramActivity.this, "Missing angle at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
                                         break;
                                     }
                                 }
@@ -239,11 +224,11 @@ public class ProgramActivity extends AppCompatActivity {
                                             globalClasses.CommandArray.add(globalClasses.MyBluetooth.ProcessCommands(BluetoothClass.Commands.C_MOVE, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_WRIST_ROT, temp));
                                         }
                                         else{
-                                            Toast.makeText(ProgramActivity.this, "Invalid argument at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(ProgramActivity.this, "Invalid angle at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
                                             break;
                                         }
                                     } catch (NumberFormatException nfe){
-                                        Toast.makeText(ProgramActivity.this, "Invalid argument at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(ProgramActivity.this, "Missing angle at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
                                         break;
                                     }
                                 }
@@ -258,11 +243,11 @@ public class ProgramActivity extends AppCompatActivity {
                                             globalClasses.CommandArray.add(globalClasses.MyBluetooth.ProcessCommands(BluetoothClass.Commands.C_MOVE, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_GRIPPER, temp));
                                         }
                                         else{
-                                            Toast.makeText(ProgramActivity.this, "Invalid argument at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(ProgramActivity.this, "Invalid angle at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
                                             break;
                                         }
                                     } catch (NumberFormatException nfe){
-                                        Toast.makeText(ProgramActivity.this, "Invalid argument at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(ProgramActivity.this, "Missing angle at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
                                         break;
                                     }
                                 }
@@ -302,7 +287,7 @@ public class ProgramActivity extends AppCompatActivity {
                                 // TODO: Comprobar si es una posicion disponible y si no lo es poner el Toast de que no son validos los argumentos+break
                             }
                             else{
-                                Toast.makeText(ProgramActivity.this, "Invalid argument at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ProgramActivity.this, "The second argument does not match with the command at line " + String.valueOf(i+1), Toast.LENGTH_SHORT).show();
                                 break;
                             }
                         }
@@ -345,24 +330,23 @@ public class ProgramActivity extends AppCompatActivity {
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                send_command_pos = 0;
                 globalClasses.MyBluetooth.writeMessage(globalClasses.CommandArray.get(send_command_pos));
-                //globalClasses.arduinoFree = false;
                 send_command_pos++;
+                buttonSend.setEnabled(false);
                 buttonStop.setEnabled(true);
-                /*for(int i = 0; i<globalClasses.CommandArray.size();i++){
-                    globalClasses.MyBluetooth.writeMessage(globalClasses.CommandArray.get(i));
-                }*/
             }
         });
 
         buttonStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: send stop!
                 ArrayList<String> temp = new ArrayList<>();
                 globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_STOP, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_NULL, temp);
-                buttonStop.setEnabled(false); //TODO: después del free por parar, deshabilitar, no solo con tocar
+                Toast.makeText(ProgramActivity.this, "Program stopped at line " + String.valueOf(send_command_pos), Toast.LENGTH_SHORT).show();
+                send_command_pos = 0;
+                buttonSend.setEnabled(true);
+                buttonStop.setEnabled(false);
             }
         });
 
@@ -389,6 +373,7 @@ public class ProgramActivity extends AppCompatActivity {
                                         for(int i = 0; i < 6; i++){
                                             if(globalClasses.positions[position*6+i] == -1) break;
                                             else {
+                                                if (i == 0) writer.append(String.valueOf(position) + "+");
                                                 writer.append(String.valueOf(globalClasses.positions[position * 6 + i]));
                                                 if (i != 5) writer.append("+");
                                                 else {
@@ -447,14 +432,37 @@ public class ProgramActivity extends AppCompatActivity {
                                     tokens[1] = tokens[1].replace("\n", " ");
                                     String[] angles = tokens[1].split(" ");
                                     Arrays.fill(globalClasses.positions,-1);
-                                    for (int i = 0; i < angles.length; i++){
-                                        try {
-                                            globalClasses.positions[i] = Integer.parseInt(angles[i]);
-                                            if (i == angles.length -1) Toast.makeText(ProgramActivity.this, "New positions saved", Toast.LENGTH_SHORT).show();
-                                        } catch (NumberFormatException e){
-                                            Toast.makeText(ProgramActivity.this, "Error while loading positions", Toast.LENGTH_SHORT).show();
-                                            break;
+                                    try {
+                                        int pos = 0;
+                                        for(int i = 0; i < angles.length/7; i++){
+                                            pos = Integer.parseInt(angles[i*7]);
+                                            for (int y = 0; y < 6; y++){
+                                                globalClasses.positions[pos*6+y] = Integer.parseInt(angles[i*7+y+1]);
+                                            }
                                         }
+
+                                        ArrayList<String> temp = new ArrayList<>();
+
+                                        // Delete all positions in Arduino
+                                        temp.add("2");
+                                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_SAVEPOS, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_NULL, temp);
+
+                                        //Save imported positions
+                                        for (int position = 0; position < globalClasses.maxPositions; position++) {
+                                            if(globalClasses.positions[position*6] != -1){
+                                                temp.clear();
+                                                temp.add("1");
+                                                temp.add(String.valueOf(position));
+                                                String posAngles = "";
+                                                for (int i = 0; i < 6; i++) posAngles = posAngles.concat(" " + String.valueOf(globalClasses.positions[position*6+i]));
+                                                temp.add(posAngles);
+                                                globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_SAVEPOS, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_NULL, temp);
+                                            }
+                                        }
+
+                                        Toast.makeText(ProgramActivity.this, "New positions saved", Toast.LENGTH_SHORT).show();
+                                    } catch (NumberFormatException e){
+                                        Toast.makeText(ProgramActivity.this, "Error while loading positions", Toast.LENGTH_SHORT).show();
                                     }
                                 }
 
@@ -487,13 +495,13 @@ public class ProgramActivity extends AppCompatActivity {
     }
 
     private void sendCommand(){
-        if (send_command_pos < globalClasses.CommandArray.size() /*&& globalClasses.arduinoFree*/){
+        if (send_command_pos < globalClasses.CommandArray.size()){
             globalClasses.MyBluetooth.writeMessage(globalClasses.CommandArray.get(send_command_pos));
-            //globalClasses.arduinoFree = false;
             send_command_pos++;
         }
         else {
             send_command_pos = 0;
+            buttonSend.setEnabled(true);
             buttonStop.setEnabled(false);
         }
     }

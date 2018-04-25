@@ -289,35 +289,13 @@ public class BluetoothClass {
                     default: break;
                 }
                 break;
-            /*case C_MOVE:
-                arg1 = Integer.parseInt(arguments.get(0));
-                if (arg1 > 0 && arg1 < Joints.values().length){
-                    arg2 = Integer.parseInt(arguments.get(1));
-                    if(arg1 == 0 && (arg2 >= 0 && arg2 <= 180)){
-                        data = data.concat("6 " + arguments.get(0) + " " + arguments.get(1));
-                    }
-                    else if(arg1 == 1 && (arg2 >= 15 && arg2 <= 165)){
-                        data = data.concat("6 " + arguments.get(0) + " " + arguments.get(1));
-                    }
-                    else if(arg1 == 2 && (arg2 >= 0 && arg2 <= 180)){
-                        data = data.concat("6 " + arguments.get(0) + " " + arguments.get(1));
-                    }
-                    else if(arg1 == 3 && (arg2 >= 0 && arg2 <= 180)){
-                        data = data.concat("6 " + arguments.get(0) + " " + arguments.get(1));
-                    }
-                    else if(arg1 == 4 && (arg2 >= 0 && arg2 <= 180)){
-                        data = data.concat("6 " + arguments.get(0) + " " + arguments.get(1));
-                    }
-                    else if(arg1 == 5 && (arg2 >= 10 && arg2 <= 73)){
-                        data = data.concat("6 " + arguments.get(0) + " " + arguments.get(1));
-                    }
-                }
-                break;*/
             case C_HAND:
                 data = data.concat("6 " + arguments.get(0));
                 break;
             case C_SAVEPOS:
-                data = data.concat("7 " + arguments.get(0));
+                if (arguments.get(0).equals("0") || arguments.get(0).equals("3")) data = data.concat("7 " + arguments.get(0) + " " + arguments.get(1));
+                else if (arguments.get(0).equals("1")) data = data.concat("7 1 " + arguments.get(1) + arguments.get(2));
+                else if (arguments.get(0).equals("2")) data = data.concat("7 " + arguments.get(0));
                 break;
             case C_STOP:
                 data = data.concat("8");
@@ -327,10 +305,5 @@ public class BluetoothClass {
 
         }
         return data;
-    }
-
-    private String CommandRecieved (){
-
-        return "";
     }
 }

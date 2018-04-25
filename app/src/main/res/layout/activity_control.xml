@@ -17,35 +17,18 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <Button
-            android:id="@+id/testControlButton"
-            android:layout_width="225dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:text='Send "Test"' />
-
-        <Button
             android:id="@+id/joggingButton"
-            android:layout_width="225dp"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
             android:text="Jogging" />
 
         <Button
             android:id="@+id/programButton"
-            android:layout_width="225dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:text="Program" />
-
-        <TextView
-            android:id="@+id/receivedText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="Data:"
-            android:textColor="@android:color/black"
-            android:textSize="18sp" />
+            android:text="Program" />
+
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

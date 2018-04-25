@@ -16,30 +16,11 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/programTest"
+        <EditText
+            android:id="@+id/codeInput"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:text='Send "ProgramTest"' />
-
-        <TextView
-            android:id="@+id/receivedText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:text="Data:"
-            android:textAllCaps="false"
-            android:textColor="@android:color/black"
-            android:textSize="18sp" />
-
-        <EditText
-            android:id="@+id/codeInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
             android:backgroundTint="@android:color/transparent"
             android:ems="10"
             android:gravity="top|left"

@@ -43,7 +43,7 @@
 
                     <TextView
                         android:id="@+id/positionSavedText"
-                        android:layout_width="225dp"
+                        android:layout_width="250dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
                         android:lines="3"
@@ -53,7 +53,7 @@
 
                     <EditText
                         android:id="@+id/positionSelected"
-                        android:layout_width="225dp"
+                        android:layout_width="250dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
                         android:layout_marginTop="5dp"
@@ -64,8 +64,18 @@
                         android:inputType="text|textPersonName|number"
                         android:maxLength="2" />
 
+                    <TextView
+                        android:id="@+id/resultPosText"
+                        android:layout_width="250dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp"
+                        android:lines="1"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp" />
+
                     <LinearLayout
-                        android:layout_width="225dp"
+                        android:layout_width="250dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
                         android:layout_marginTop="5dp"
@@ -86,60 +96,14 @@
                             android:text="Delete" />
                     </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/resultPosText"
-                        android:layout_width="225dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginTop="5dp"
-                        android:lines="1"
-                        android:textColor="@android:color/black"
-                        android:textSize="18sp" />
-
-                    <Button
-                        android:id="@+id/buttonRefresh"
-                        android:layout_width="225dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:text="Refresh Arduino" />
-
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/tab1"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|center"
                     android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/receivedText2"
-                            android:layout_width="230dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_margin="0dp"
-                            android:layout_weight="1"
-                            android:text="Data:"
-                            android:textColor="@android:color/black"
-                            android:textSize="18sp" />
-
-                        <Button
-                            android:id="@+id/joggingTest"
-                            android:layout_width="wrap_content"
-                            android:layout_height="40dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_margin="0dp"
-                            android:layout_weight="1"
-                            android:text="Test" />
-                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"

@@ -17,11 +17,11 @@ import java.util.ArrayList;
 
 public class JoggingActivity extends AppCompatActivity {
     GlobalClasses globalClasses;
-    Button joggingTest, jogMinusButton1, jogMinusButton2, jogMinusButton3, jogMinusButton4;
+    Button jogMinusButton1, jogMinusButton2, jogMinusButton3, jogMinusButton4;
     Button jogMinusButton5, jogMinusButton6, jogPlusButton1, jogPlusButton2, jogPlusButton3;
     Button jogPlusButton4, jogPlusButton5, jogPlusButton6, buttonSavePosition, buttonView;
-    Button buttonDelete, buttonRefresh;
-    TextView receivedText2, textTarget1, textTarget2, textTarget3, textTarget4, textTarget5, textTarget6;
+    Button buttonDelete;
+    TextView textTarget1, textTarget2, textTarget3, textTarget4, textTarget5, textTarget6;
     TextView textCurr1, textCurr2, textCurr3, textCurr4, textCurr5, textCurr6, positionSavedText;
     TextView resultPosText;
     EditText textSavePos, positionSelected;
@@ -43,8 +43,6 @@ public class JoggingActivity extends AppCompatActivity {
 
         //Resources res = getResources();
 
-        joggingTest = findViewById(R.id.joggingTest);
-        receivedText2 = findViewById(R.id.receivedText2);
         textTarget1 = findViewById(R.id.textTarget1);
         textTarget2 = findViewById(R.id.textTarget2);
         textTarget3 = findViewById(R.id.textTarget3);
@@ -74,7 +72,6 @@ public class JoggingActivity extends AppCompatActivity {
         buttonSavePosition = findViewById(R.id.buttonSavePosition);
         buttonView = findViewById(R.id.buttonView);
         buttonDelete = findViewById(R.id.buttonDelete);
-        buttonRefresh = findViewById(R.id.buttonRefresh);
         textSavePos = findViewById(R.id.textSavePos);
         positionSelected = findViewById(R.id.positionSelected);
         tabs = findViewById(R.id.joggingTabs);
@@ -154,19 +151,10 @@ public class JoggingActivity extends AppCompatActivity {
                         textCurr5.setText(tokens[5]);
                         textCurr6.setText(tokens[6]);
                     }
-                    else receivedText2.setText("Data: " + readMessage);
+                    //else Do something with the message
                 }
             }
         };
-
-        joggingTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!array.isEmpty()) array.clear();
-                array.add("Jogging Test");
-                globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_SENDTO, BluetoothClass.Communications.COM_SERIAL, BluetoothClass.Joints.J_NULL, array);
-            }
-        });
 
         jogMinusButton1.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -466,11 +454,12 @@ public class JoggingActivity extends AppCompatActivity {
                             else if (i == 5) globalClasses.positions[position+i] = Integer.parseInt(textCurr6.getText().toString());
                         }
 
-                        if (i == 6) {
-                            array.clear();
-                            array.add(textSavePos.getText().toString());
-                            globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_SAVEPOS, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_NULL, array);
-                        }
+                        // Save position in Arduino
+                        array.clear();
+                        array.add("0");
+                        array.add(textSavePos.getText().toString());
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_SAVEPOS, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_NULL, array);
+                        Toast.makeText(JoggingActivity.this, "Position saved", Toast.LENGTH_SHORT).show();
                     }
                     else {
                         Toast.makeText(JoggingActivity.this, "Choose a position between 0 and " + String.valueOf(globalClasses.maxPositions-1), Toast.LENGTH_SHORT).show();
@@ -518,6 +507,21 @@ public class JoggingActivity extends AppCompatActivity {
                         if (globalClasses.positions[position] != -1) {
                             resultPosText.setText("");
                             for (int i = 0; i < 6; i++) globalClasses.positions[position + i] = -1;
+                        }
+
+                        // Delete position from Arduino
+                        array.clear();
+                        array.add("3");
+                        array.add(positionSelected.getText().toString());
+                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_SAVEPOS, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_NULL, array);
+
+                        // Refresh positionSavedText TextEdit
+                        resultPosText.setText("");
+                        positionSavedText.setText("Positions saved:");
+                        for (position = 0; position < globalClasses.maxPositions; position++) {
+                            if(globalClasses.positions[position*6] != -1){
+                                positionSavedText.append(" " + String.valueOf(position));
+                            }
                         }
                     }
                     else {
