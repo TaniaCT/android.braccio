@@ -1,5 +1,6 @@
 package com.upcstudios.tania.braccioapp3;
 
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -11,13 +12,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ProgramActivity extends AppCompatActivity {
     GlobalClasses globalClasses;
-    EditText inputCode;
+    EditText inputCode, fileName;
     TextView receivedText;
-    Button programTest, buttonProcess, buttonSend, buttonStop;
+    Button programTest, buttonProcess, buttonSend, buttonStop, buttonSave, buttonImport;
 
     int send_command_pos = 0;
     int max_lines = 20;
@@ -31,11 +38,14 @@ public class ProgramActivity extends AppCompatActivity {
         setContentView(R.layout.activity_program);
 
         inputCode = findViewById(R.id.codeInput);
+        fileName = findViewById(R.id.fileName);
         receivedText = findViewById(R.id.receivedText);
         programTest = findViewById(R.id.programTest);
         buttonProcess = findViewById(R.id.buttonProcess);
         buttonSend = findViewById(R.id.buttonSend);
         buttonStop = findViewById(R.id.buttonStop);
+        buttonSave = findViewById(R.id.buttonSave);
+        buttonImport = findViewById(R.id.buttonImport);
 
         readBluetoothThread = new Thread(new Runnable() {
             @Override
@@ -75,17 +85,7 @@ public class ProgramActivity extends AppCompatActivity {
                         //globalClasses.arduinoFree = true;
                         sendCommand();
                     }
-                    //String[] tokens = readMessage.split(" ");
-                    /*if (tokens[0].equals("RESPONSE"))
-                    {
-                        textCurr1.setText(tokens[1]);
-                        textCurr2.setText(tokens[2]);
-                        textCurr3.setText(tokens[3]);
-                        textCurr4.setText(tokens[4]);
-                        textCurr5.setText(tokens[5]);
-                        textCurr6.setText(tokens[6]);
-                    }
-                    else*/ receivedText.setText("Data: " + readMessage);
+                    receivedText.setText("Data: " + readMessage);
                 }
             }
         };
@@ -120,8 +120,6 @@ public class ProgramActivity extends AppCompatActivity {
                 String codeTokens[] = inputCode.getText().toString().split("\n");
 
                 globalClasses.CommandArray.clear();
-                //globalClasses.CommandArray.add("9"); // 9: Program command
-                //globalClasses.CommandArray.add("9 0"); // 0: Start
 
                 // Remove empty strings
                 for (int i=0; i<codeTokens.length;i++){
@@ -338,7 +336,6 @@ public class ProgramActivity extends AppCompatActivity {
                     }
                 }
                 else {
-                    //globalClasses.CommandArray.add("9 1"); //9: program 1: end
                     globalClasses.Code = inputCode.getText().toString();
                     buttonSend.setEnabled(true);
                 }
@@ -366,6 +363,107 @@ public class ProgramActivity extends AppCompatActivity {
                 ArrayList<String> temp = new ArrayList<>();
                 globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_STOP, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_NULL, temp);
                 buttonStop.setEnabled(false); //TODO: después del free por parar, deshabilitar, no solo con tocar
+            }
+        });
+
+        buttonSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(inputCode.getText().length() == 0) Toast.makeText(ProgramActivity.this, "Insert some code.", Toast.LENGTH_SHORT).show();
+                else {
+                    if (!buttonSend.isEnabled()) Toast.makeText(ProgramActivity.this, "Verify your code.", Toast.LENGTH_SHORT).show();
+                    else {
+                        if (fileName.getText().length() == 0) Toast.makeText(ProgramActivity.this, "Insert a file name.", Toast.LENGTH_SHORT).show();
+                        else {
+                            boolean sdCardPresent = android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
+                            if(sdCardPresent){
+                                try {
+                                    File root = new File(Environment.getExternalStorageDirectory(), "Codes");
+                                    if(!root.exists()) root.mkdirs();
+                                    File gpxfile = new File(root, fileName.getText().toString()+".txt");
+                                    FileWriter writer = new FileWriter(gpxfile);
+                                    writer.append(inputCode.getText().toString());
+                                    writer.append("\nEND;\n");
+
+                                    for (int position = 0; position < globalClasses.maxPositions; position++) {
+                                        for(int i = 0; i < 6; i++){
+                                            if(globalClasses.positions[position*6+i] == -1) break;
+                                            else {
+                                                writer.append(String.valueOf(globalClasses.positions[position * 6 + i]));
+                                                if (i != 5) writer.append("+");
+                                                else {
+                                                    if (position > 0 && position < globalClasses.maxPositions-1) writer.append("\n");
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    writer.flush();
+                                    writer.close();
+                                    Toast.makeText(ProgramActivity.this, "Program saved in" + root.getPath(), Toast.LENGTH_SHORT).show();
+                                } catch (IOException e){
+                                    Toast.makeText(ProgramActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            else {
+                                Toast.makeText(ProgramActivity.this, "SD Card not available", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        buttonImport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (fileName.getText().length() == 0) Toast.makeText(ProgramActivity.this, "Insert a valid file", Toast.LENGTH_SHORT).show();
+                else {
+                    File root = new File(Environment.getExternalStorageDirectory(), "Codes");
+                    if(!root.exists()) Toast.makeText(ProgramActivity.this, "The path does not exist", Toast.LENGTH_SHORT).show();
+                    else {
+                        File gpxfile = new File(root, fileName.getText().toString()+".txt");
+
+                        if(!gpxfile.exists()) Toast.makeText(ProgramActivity.this, "The file does not exist", Toast.LENGTH_SHORT).show();
+                        else {
+                            StringBuilder text = new StringBuilder();
+                            try {
+                                BufferedReader br = new BufferedReader(new FileReader(gpxfile));
+                                String line;
+
+                                while ((line = br.readLine()) != null){
+                                    text.append(line);
+                                    text.append("\n");
+                                }
+
+                                br.close();
+
+                                String[] tokens = text.toString().split("\nEND;\n");
+                                inputCode.setText(tokens[0]);
+                                globalClasses.Code = tokens[0];
+
+                                if(tokens.length > 1) {
+                                    tokens[1] = tokens[1].substring(0, tokens[1].length()-1).replace("+", " ");
+                                    tokens[1] = tokens[1].replace("\n", " ");
+                                    String[] angles = tokens[1].split(" ");
+                                    Arrays.fill(globalClasses.positions,-1);
+                                    for (int i = 0; i < angles.length; i++){
+                                        try {
+                                            globalClasses.positions[i] = Integer.parseInt(angles[i]);
+                                            if (i == angles.length -1) Toast.makeText(ProgramActivity.this, "New positions saved", Toast.LENGTH_SHORT).show();
+                                        } catch (NumberFormatException e){
+                                            Toast.makeText(ProgramActivity.this, "Error while loading positions", Toast.LENGTH_SHORT).show();
+                                            break;
+                                        }
+                                    }
+                                }
+
+                            } catch (IOException e){
+                                Toast.makeText(ProgramActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                }
             }
         });
 

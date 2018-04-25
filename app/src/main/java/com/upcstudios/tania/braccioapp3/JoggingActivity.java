@@ -18,13 +18,16 @@ import java.util.ArrayList;
 public class JoggingActivity extends AppCompatActivity {
     GlobalClasses globalClasses;
     Button joggingTest, jogMinusButton1, jogMinusButton2, jogMinusButton3, jogMinusButton4;
-    Button jogMinusButton5, jogMinusButton6, jogPlusButton1, jogPlusButton2, jogPlusButton3, jogPlusButton4;
-    Button jogPlusButton5, jogPlusButton6, buttonSavePosition;
+    Button jogMinusButton5, jogMinusButton6, jogPlusButton1, jogPlusButton2, jogPlusButton3;
+    Button jogPlusButton4, jogPlusButton5, jogPlusButton6, buttonSavePosition, buttonView;
+    Button buttonDelete, buttonRefresh;
     TextView receivedText2, textTarget1, textTarget2, textTarget3, textTarget4, textTarget5, textTarget6;
-    TextView textCurr1, textCurr2, textCurr3, textCurr4, textCurr5, textCurr6;
-    EditText textSavePos;
+    TextView textCurr1, textCurr2, textCurr3, textCurr4, textCurr5, textCurr6, positionSavedText;
+    TextView resultPosText;
+    EditText textSavePos, positionSelected;
     Handler joggingHandler;
     TabHost tabs;
+
     public enum CURRENT_BUTTON {NULL, BASE_P, BASE_M, SHOULDER_P, SHOULDER_M, ELBOW_P, ELBOW_M,
         WRIST_VER_P, WRIST_VER_M, WRIST_ROT_P, WRIST_ROT_M, GRIPPER_P, GRIPPER_M}
     CURRENT_BUTTON current_button = CURRENT_BUTTON.NULL;
@@ -54,6 +57,8 @@ public class JoggingActivity extends AppCompatActivity {
         textCurr4 = findViewById(R.id.textCurr4);
         textCurr5 = findViewById(R.id.textCurr5);
         textCurr6 = findViewById(R.id.textCurr6);
+        positionSavedText = findViewById(R.id.positionSavedText);
+        resultPosText = findViewById(R.id.resultPosText);
         jogMinusButton1 = findViewById(R.id.jogMinusButton1);
         jogMinusButton2 = findViewById(R.id.jogMinusButton2);
         jogMinusButton3 = findViewById(R.id.jogMinusButton3);
@@ -67,7 +72,11 @@ public class JoggingActivity extends AppCompatActivity {
         jogPlusButton5 = findViewById(R.id.jogPlusButton5);
         jogPlusButton6 = findViewById(R.id.jogPlusButton6);
         buttonSavePosition = findViewById(R.id.buttonSavePosition);
+        buttonView = findViewById(R.id.buttonView);
+        buttonDelete = findViewById(R.id.buttonDelete);
+        buttonRefresh = findViewById(R.id.buttonRefresh);
         textSavePos = findViewById(R.id.textSavePos);
+        positionSelected = findViewById(R.id.positionSelected);
         tabs = findViewById(R.id.joggingTabs);
 
         //-------- Tab Setup -----
@@ -469,6 +478,70 @@ public class JoggingActivity extends AppCompatActivity {
                 }
             }
         });
+
+        buttonView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(positionSelected.getText().length() == 0){
+                    Toast.makeText(JoggingActivity.this, "Select a position" , Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    int position = (Integer.parseInt(positionSelected.getText().toString()));
+                    if(position >= 0 && position < globalClasses.maxPositions){
+                        position = position*6;
+                        if (globalClasses.positions[position] == -1) resultPosText.setText("Empty position");
+                        else {
+                            resultPosText.setText("");
+                            for (int i = 0; i < 6;i++){
+                                resultPosText.append(String.valueOf(globalClasses.positions[position+i]));
+                                if (i != 5) resultPosText.append(" ");
+                            }
+                        }
+                    }
+                    else {
+                        Toast.makeText(JoggingActivity.this, "Choose a position between 0 and " + String.valueOf(globalClasses.maxPositions-1), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
+
+        buttonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(positionSelected.getText().length() == 0){
+                    Toast.makeText(JoggingActivity.this, "Select a position" , Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    int position = (Integer.parseInt(positionSelected.getText().toString()));
+                    if(position >= 0 && position < globalClasses.maxPositions){
+                        position = position*6;
+                        if (globalClasses.positions[position] != -1) {
+                            resultPosText.setText("");
+                            for (int i = 0; i < 6; i++) globalClasses.positions[position + i] = -1;
+                        }
+                    }
+                    else {
+                        Toast.makeText(JoggingActivity.this, "Choose a position between 0 and " + String.valueOf(globalClasses.maxPositions-1), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
+
+        tabs.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+            @Override
+            public void onTabChanged(String s) {
+                positionSavedText.setText("Positions saved:");
+                if("myTab3".equals(s)){
+                    resultPosText.setText("");
+                    for (int position = 0; position < globalClasses.maxPositions; position++) {
+                        if(globalClasses.positions[position*6] != -1){
+                            positionSavedText.append(" " + String.valueOf(position));
+                        }
+                    }
+                }
+            }
+        });
+
     }
 
     @Override

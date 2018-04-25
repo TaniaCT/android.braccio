@@ -18,7 +18,7 @@
 
         <Button
             android:id="@+id/programTest"
-            android:layout_width="225dp"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:text='Send "ProgramTest"' />
@@ -40,11 +40,13 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
+            android:backgroundTint="@android:color/transparent"
             android:ems="10"
             android:gravity="top|left"
             android:hint="Insert code :)"
             android:inputType="textMultiLine"
-            android:maxLines="10"
+            android:lines="6"
+            android:maxLines="20"
             android:minLines="4" />
 
         <Button
@@ -55,20 +57,63 @@
             android:layout_marginTop="5dp"
             android:text="Process Data" />
 
-        <Button
-            android:id="@+id/buttonSend"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
-            android:text="Send" />
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/buttonStop"
+            <Button
+                android:id="@+id/buttonSend"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Send" />
+
+            <Button
+                android:id="@+id/buttonStop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Stop" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
-            android:text="Stop" />
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/buttonSave"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Save" />
+
+            <Button
+                android:id="@+id/buttonImport"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Import" />
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/fileName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:backgroundTint="@android:color/transparent"
+            android:ems="10"
+            android:gravity="center_vertical"
+            android:hint="FileName"
+            android:inputType="text" />
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
