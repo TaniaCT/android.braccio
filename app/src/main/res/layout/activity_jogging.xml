@@ -458,11 +458,11 @@
                             android:layout_marginLeft="10dp"
                             android:layout_weight="1"
                             android:backgroundTint="@android:color/transparent"
-                            android:digits="012345"
+                            android:digits="0123456789"
                             android:ems="10"
                             android:hint="Position"
                             android:inputType="number"
-                            android:maxLength="1"
+                            android:maxLength="2"
                             android:textSize="18sp" />
                     </LinearLayout>
 

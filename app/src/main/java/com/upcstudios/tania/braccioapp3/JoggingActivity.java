@@ -442,22 +442,29 @@ public class JoggingActivity extends AppCompatActivity {
                     Toast.makeText(JoggingActivity.this, "Select a name for the current position" , Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    int position = (Integer.parseInt(textSavePos.getText().toString()))*6;
-                    int i;
-                    // There are 6 joint angles for each position
-                    for (i = 0; i < 6;i++){
-                        if (i == 0) globalClasses.positions[position+i] = Integer.parseInt(textCurr1.getText().toString());
-                        else if (i == 1) globalClasses.positions[position+i] = Integer.parseInt(textCurr2.getText().toString());
-                        else if (i == 2) globalClasses.positions[position+i] = Integer.parseInt(textCurr3.getText().toString());
-                        else if (i == 3) globalClasses.positions[position+i] = Integer.parseInt(textCurr4.getText().toString());
-                        else if (i == 4) globalClasses.positions[position+i] = Integer.parseInt(textCurr5.getText().toString());
-                        else if (i == 5) globalClasses.positions[position+i] = Integer.parseInt(textCurr6.getText().toString());
-                    }
+                    int position = (Integer.parseInt(textSavePos.getText().toString()));
+                    if(position >= 0 && position <= globalClasses.maxPositions-1){
+                        position = position*6;
 
-                    if (i == 6) {
-                        array.clear();
-                        array.add(textSavePos.getText().toString());
-                        globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_SAVEPOS, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_NULL, array);
+                        int i;
+                        // There are 6 joint angles for each position
+                        for (i = 0; i < 6;i++){
+                            if (i == 0) globalClasses.positions[position+i] = Integer.parseInt(textCurr1.getText().toString());
+                            else if (i == 1) globalClasses.positions[position+i] = Integer.parseInt(textCurr2.getText().toString());
+                            else if (i == 2) globalClasses.positions[position+i] = Integer.parseInt(textCurr3.getText().toString());
+                            else if (i == 3) globalClasses.positions[position+i] = Integer.parseInt(textCurr4.getText().toString());
+                            else if (i == 4) globalClasses.positions[position+i] = Integer.parseInt(textCurr5.getText().toString());
+                            else if (i == 5) globalClasses.positions[position+i] = Integer.parseInt(textCurr6.getText().toString());
+                        }
+
+                        if (i == 6) {
+                            array.clear();
+                            array.add(textSavePos.getText().toString());
+                            globalClasses.MyBluetooth.writeMessage(BluetoothClass.Commands.C_SAVEPOS, BluetoothClass.Communications.COM_NULL, BluetoothClass.Joints.J_NULL, array);
+                        }
+                    }
+                    else {
+                        Toast.makeText(JoggingActivity.this, "Choose a position between 0 and " + String.valueOf(globalClasses.maxPositions-1), Toast.LENGTH_SHORT).show();
                     }
                 }
             }

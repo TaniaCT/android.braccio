@@ -11,8 +11,9 @@ public class GlobalClasses extends Application {
     public ArrayList<String> CommandArray = new ArrayList<>();
     public String Code = "";
     //public boolean arduinoFree = true;  //TODO: borrar¿?
-    public int positions[] = new int[36];
-    public  int savedPositions = 0;
+    public  int maxPositions = 20;
+    public int positions[] = new int[6*maxPositions];
+
 
     @Override
     public void onCreate() {

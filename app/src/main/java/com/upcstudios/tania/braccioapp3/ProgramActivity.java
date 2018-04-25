@@ -286,7 +286,7 @@ public class ProgramActivity extends AppCompatActivity {
                                 int myNum = 0;
                                 try {
                                     myNum = Integer.parseInt(argTokens[1].substring(1));
-                                    if (myNum >= 0 && myNum < 6){
+                                    if (myNum >= 0 && myNum < globalClasses.maxPositions){
                                         int position;
                                         for (position = 0; position < 6; position++){
                                             if (globalClasses.positions[myNum*6+position] == -1) break;
