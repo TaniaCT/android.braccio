@@ -18,16 +18,17 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class BluetoothClass {
 
+    // Public variables definition
     public boolean BTConnected = false;
     public static final ConcurrentLinkedQueue<String> messageQueue = new ConcurrentLinkedQueue<>();
     public static final Object messageLock = new Object();
     public enum Commands {C_CONNECT, C_DISCONNECT, C_REQUEST, C_SENDTO, C_JOGGING, C_MOVE, C_HAND, C_SAVEPOS, C_STOP, C_NULL}
     public enum Communications{COM_SERIAL, COM_BLUETOOTH,COM_NULL}
-    public enum JogCommand {JC_MINUS, JC_EQU, JC_PLUS, JC_NULL}
     public enum Joints{
-        J_BASE, J_SHOULDER, J_ELBOW, J_WRIST_VER, J_WRIST_ROT, J_GRIPPER, J_NULL
+        J_BASE, J_SHOULDER, J_ELBOW, J_WRIST_VER, J_WRIST_ROT, J_GRIPPER, J_X, J_Y, J_Z, J_NULL
     }
 
+    // Private variables definition
     private Context BTContext;
     private BluetoothAdapter BTAdapter = null;
     private ArrayAdapter<String> PairedDevicesArrayAdapter;
@@ -38,17 +39,20 @@ public class BluetoothClass {
     private Thread btConnectionThread;
     private OutputStream mmOutStream = null;
 
-
+    // Constructor of the class Bluetooth, which needs a context
     public BluetoothClass(Context context) {
         BTContext = context;
         BTAdapter = BluetoothAdapter.getDefaultAdapter();
         PairedDevicesArrayAdapter = new ArrayAdapter<String>(context, R.layout.device_list_item);
     }
 
+    // Method that returns the mobile Bluetooth adapter object
     public BluetoothAdapter GetBTAdapter() {
         return BTAdapter;
     }
 
+    // Method that verifies if the Bluetooth Adapter is enabled. If not, it is asked to the user
+    // to be activated
     public void VerifyBT() {
         if (BTAdapter == null)
             Toast.makeText(BTContext, "This device does not support Bluetooth", Toast.LENGTH_LONG).show();
@@ -59,7 +63,7 @@ public class BluetoothClass {
             }
         }
     }
-
+    // Method that return a list of paired devices provided by the Bluetooth adapter
     public ArrayAdapter<String> GetPairedDevices() {
         if (PairedDevicesArrayAdapter.getCount() != 0) PairedDevicesArrayAdapter.clear();
         VerifyBT();
@@ -75,6 +79,7 @@ public class BluetoothClass {
         return PairedDevicesArrayAdapter;
     }
 
+    // Method that sets the address of the device to be linked, and tries to set the connection
     public void SetAddress(String address) throws IOException {
         BTAddress = address;
         BTDevice = BTAdapter.getRemoteDevice(BTAddress);
@@ -86,14 +91,15 @@ public class BluetoothClass {
         }
     }
 
+    // Method that return the address of the linked remote device
     public String GetAddress() {
         return BTAddress;
     }
 
+    // Method that performs the connection between the Bluetooth adapter and the remote selected device
     private void SetSocket() throws IOException {
         try {
             BTSocket = BTDevice.createInsecureRfcommSocketToServiceRecord(BTMODULEUUID);
-            for (int i = 0; i < 100; i++) ;
             try {
                 BTSocket.connect();
                 ArrayList<String> array = new ArrayList<String>();
@@ -111,10 +117,12 @@ public class BluetoothClass {
         }
     }
 
+    // Method that sets the UUID
     public void SetUUID(UUID NewUUID) {
         BTMODULEUUID = NewUUID;
     }
 
+    // Method used to close an active connection
     public void CloseConnection() {
         try {
             BTSocket.close();
@@ -125,6 +133,7 @@ public class BluetoothClass {
         }
     }
 
+    // Method that sets the input data stream and allows to read the received data
     private class ConnectedRunnable implements Runnable{
         private final InputStream mmInStream;
         //private final OutputStream mmOutStream;
@@ -169,6 +178,7 @@ public class BluetoothClass {
         }
     }
 
+    // Method that allows to send a coded command
     public void writeMessage(Commands command, Communications communication, Joints joint, ArrayList<String> arguments) {
         try {
             if(BTSocket != null && mmOutStream == null)
@@ -184,6 +194,7 @@ public class BluetoothClass {
         }
     }
 
+    // Method that allows to send a string
     public void writeMessage(String data) {
         try {
             if(BTSocket != null && mmOutStream == null)
@@ -198,6 +209,8 @@ public class BluetoothClass {
         }
     }
 
+    // Method used to code commands sent form the activities, in order to sent the result to the
+    // Arduino.
     public String ProcessCommands (Commands command, Communications communication, Joints joint, ArrayList<String> arguments) {
         String data = "";
         int arg1 = 0;
@@ -247,12 +260,21 @@ public class BluetoothClass {
                         case J_GRIPPER:
                             data = data.concat("4 5 " + arguments.get(0));
                             break;
+                        case J_X:
+                            data = data.concat("4 6 " + arguments.get(0));
+                            break;
+                        case J_Y:
+                            data = data.concat("4 7 " + arguments.get(0));
+                            break;
+                        case J_Z:
+                            data = data.concat("4 8 " + arguments.get(0));
+                            break;
                         case J_NULL: break;
                         default: break;
                     }
                 }
                 break;
-            case C_MOVE: //TODO: AÑADIR X Y Z Y POSICIONES DISPONIBLES
+            case C_MOVE:
                 switch (joint) {
                     case J_BASE:
                         data = data.concat("5 0 " + arguments.get(0));
@@ -274,13 +296,13 @@ public class BluetoothClass {
                         break;
                     case J_NULL:
                         if (arguments.get(0).equals("X")){
-
+                            data = data.concat("5 6 " + arguments.get(1));
                         }
                         else if (arguments.get(0).equals("Y")){
-
+                            data = data.concat("5 7 " + arguments.get(1));
                         }
                         else if (arguments.get(0).equals("Z")){
-
+                            data = data.concat("5 8 " + arguments.get(1));
                         }
                         else if (arguments.get(0).equals("P")){
                             data = data.concat("5 9 " + arguments.get(1));

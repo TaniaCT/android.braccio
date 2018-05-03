@@ -17,14 +17,14 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <EditText
-            android:id="@+id/codeInput"
+            android:id="@+id/textCodeInput"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:backgroundTint="@android:color/transparent"
             android:ems="10"
             android:gravity="top|left"
-            android:hint="Insert code :)"
+            android:hint="Insert some code"
             android:inputType="textMultiLine"
             android:lines="6"
             android:maxLines="20"
@@ -84,7 +84,7 @@
         </LinearLayout>
 
         <EditText
-            android:id="@+id/fileName"
+            android:id="@+id/textFileName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -93,7 +93,7 @@
             android:backgroundTint="@android:color/transparent"
             android:ems="10"
             android:gravity="center_vertical"
-            android:hint="FileName"
+            android:hint="File name"
             android:inputType="text" />
 
     </LinearLayout>

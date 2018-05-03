@@ -4,50 +4,43 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.upcstudios.tania.braccioapp3.MainActivity">
+    tools:context="com.upcstudios.tania.braccioapp3.LinkActivity">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Tinkerkit Braccio Robot Control"
-            android:textAlignment="center"
-            android:textColor="@android:color/black"
-            android:textSize="18sp" />
-
-        <ImageView
-            android:id="@+id/braccioImage"
-            android:layout_width="150dp"
-            android:layout_height="180dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="50dp"
-            android:layout_marginTop="50dp"
-            app:srcCompat="@mipmap/braccio" />
+            android:background="@color/colorAccent"
+            android:gravity="center_horizontal"
+            android:text="List of devices"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/buttonJogging"
+        <ListView
+            android:id="@+id/listDevices"
             android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:text="Jogging" />
+            android:layout_height="250dp" />
 
         <Button
-            android:id="@+id/buttonProgram"
-            android:layout_width="match_parent"
+            android:id="@+id/buttonSearchPaired"
+            android:layout_width="225dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="Program" />
-
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:text="Search paired devices" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

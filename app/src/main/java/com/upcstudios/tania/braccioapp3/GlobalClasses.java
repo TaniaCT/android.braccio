@@ -7,6 +7,7 @@ import java.util.Arrays;
 
 public class GlobalClasses extends Application {
 
+    // Variable definition
     public BluetoothClass MyBluetooth;
     public ArrayList<String> CommandArray = new ArrayList<>();
     public String Code = "";
@@ -19,6 +20,7 @@ public class GlobalClasses extends Application {
         super.onCreate();
         MyBluetooth = new BluetoothClass(getApplicationContext());
 
+        // Initialization of the positions available
         Arrays.fill(positions,-1);
 
     }
